@@ -38,6 +38,9 @@ public class FeedRewindRepository : IFeedRewindRepository
 
     public async Task UpdateAsync(EditFeedRewindDto edit)
     {
+        var original = await GetAsync(edit.Id);
+        if (original is null) throw new ArgumentException($"Item {edit.Id} does not exist.", nameof(edit));
+
         var feedRewind = new FeedRewind
         {
             Id = edit.Id,
@@ -45,6 +48,7 @@ public class FeedRewindRepository : IFeedRewindRepository
             KeyEntryId = edit.KeyEntryId,
             DateOfKeyEntry = edit.DateOfKeyEntry,
             Interval = edit.Interval,
+            CreatedOn = original.CreatedOn,
         };
 
         var filePath = Path.Combine(DataFilesDirectory, string.Concat(feedRewind.Id.ToString(), ".json"));
