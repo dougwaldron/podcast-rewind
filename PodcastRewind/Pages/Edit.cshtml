@@ -1,0 +1,47 @@
+﻿@page "{id:Guid?}"
+@model EditModel
+@{
+    ViewData["Title"] = $"Edit Settings for Podcast ⏪ Rewind for {Model.PodcastTitle}";
+}
+
+<h1>
+    Edit Settings for Podcast ⏪ Rewind Feed for:<br />
+    <em>@Model.PodcastTitle</em>
+</h1>
+
+@if (Model.PodcastEpisodes.Count > 0)
+{
+    <form method="post">
+    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+    <div class="mb-3">
+        <label class="form-label" asp-for="EditFeedRewind.DateOfKeyEntry"></label>
+        <input class="form-control" asp-for="EditFeedRewind.DateOfKeyEntry" />
+        <br />
+        <label class="form-label" asp-for="EditFeedRewind.Interval"></label>
+        <input class="form-control" asp-for="EditFeedRewind.Interval" />
+    </div>
+
+    @Html.DisplayNameFor(m => m.EditFeedRewind.KeyEntryId)
+    <div class="vh-50 overflow-scroll mb-3">
+        <div class="card">
+            <ul class="list-group list-group-flush">
+                @foreach (var episode in Model.PodcastEpisodes)
+                    {
+                        <li class="list-group-item p-0">
+                            <div class="form-check mb-0">
+                                <label class="form-check-label p-2 d-block" for="e-@episode.NormalizedId">
+                                    <input class="form-check-input" type="radio" asp-for="EditFeedRewind.KeyEntryId" value="@episode.Id" id="e-@episode.NormalizedId" />
+                                    @Html.DisplayFor(m => episode.PublishDate): <strong>@episode.Title</strong>
+                                </label>
+                            </div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+        <input type="hidden" asp-for="EditFeedRewind.FeedUrl" />
+        <input type="hidden" asp-for="EditFeedRewind.Id" />
+        <button class="btn btn-primary" type="submit">Update Podcast Rewind Feed Settings</button>
+    </form>
+}

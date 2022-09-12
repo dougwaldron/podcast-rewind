@@ -1,0 +1,36 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.vh-50 {
+  height: 50vh !important;
+}
+
+.vh-75 {
+  height: 75vh !important;
+}
+
+.overflow-scroll-y {
+  overflow-y: scroll !important;
+}
+
+
+.list-group-item .form-check-label:hover,
+.list-group-item .form-check-label:focus {
+  background-color: rgb(133, 235, 255);
+}
