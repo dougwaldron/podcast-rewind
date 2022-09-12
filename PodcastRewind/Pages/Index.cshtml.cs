@@ -26,7 +26,6 @@ public class IndexModel : PageModel
         if (search is null) return Page();
 
         // Default: retrieve 30 items using the US search
-        // TODO: Consider internationalizing?
         try
         {
             SearchResults = (await _finder.SearchPodcastsAsync(search, 30))
@@ -35,7 +34,7 @@ public class IndexModel : PageModel
         catch (HttpRequestException)
         {
             ModelState.AddModelError("Search",
-                "The iTunes poadcast search service did not respond.");
+                "The iTunes podcast search service did not respond.");
         }
 
         return Page();

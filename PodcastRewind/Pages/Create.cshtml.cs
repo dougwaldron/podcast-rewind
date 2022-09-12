@@ -52,7 +52,6 @@ public class CreateModel : PageModel
             return Page();
         }
 
-        // TODO: validate values
         var id = await _repository.SaveAsync(CreateFeedRewind);
         return RedirectToPage("Details", new { id });
     }

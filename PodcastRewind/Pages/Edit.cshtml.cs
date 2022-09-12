@@ -59,7 +59,6 @@ public class EditModel : PageModel
             return Page();
         }
 
-        // TODO: validate values
         await _repository.UpdateAsync(EditFeedRewind);
         return RedirectToPage("Details", new { EditFeedRewind.Id });
     }

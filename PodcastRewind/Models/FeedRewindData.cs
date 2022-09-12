@@ -19,17 +19,14 @@ public class FeedRewindData
 
     private SyndicationFeed? OriginalFeed { get; set; }
 
-    public bool OriginalFeedIsNull { get; set; } = true;
-    public string OriginalFeedTitle { get; set; } = string.Empty;
+    public bool OriginalFeedIsNull { get; private set; } = true;
+    public string OriginalFeedTitle { get; private set; } = string.Empty;
     public FeedRewind FeedRewind { get; private set; }
     public SyndicationFeed? RewoundFeed { get; private set; }
     public SyndicationFeed? ScheduledFeed { get; private set; }
 
     private void LoadFeed()
     {
-        // TODO: Cache rewound feed and load from cache 
-        // if feed publication date has not changed.
-
         if (string.IsNullOrEmpty(FeedRewind.FeedUrl)) return;
         using var xmlReader = XmlReader.Create(FeedRewind.FeedUrl);
         OriginalFeed = SyndicationFeed.Load(xmlReader);

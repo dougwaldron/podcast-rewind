@@ -29,7 +29,7 @@ public class FeedRewindRepository : IFeedRewindRepository
 
         var filePath = Path.Combine(DataFilesDirectory, string.Concat(id.ToString(), ".json"));
         Directory.CreateDirectory(DataFilesDirectory);
-        using FileStream stream = File.Create(filePath);
+        await using var stream = File.Create(filePath);
         await JsonSerializer.SerializeAsync(stream, feedRewind);
         await stream.DisposeAsync();
 
@@ -48,8 +48,7 @@ public class FeedRewindRepository : IFeedRewindRepository
         };
 
         var filePath = Path.Combine(DataFilesDirectory, string.Concat(feedRewind.Id.ToString(), ".json"));
-        Directory.CreateDirectory(DataFilesDirectory);
-        using FileStream stream = File.Create(filePath);
+        await using var stream = File.Create(filePath);
         await JsonSerializer.SerializeAsync(stream, feedRewind);
         await stream.DisposeAsync();
     }
@@ -60,7 +59,7 @@ public class FeedRewindRepository : IFeedRewindRepository
 
         try
         {
-            using FileStream stream = File.OpenRead(filePath);
+            await using var stream = File.OpenRead(filePath);
             return await JsonSerializer.DeserializeAsync<FeedRewind>(stream);
         }
         catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
