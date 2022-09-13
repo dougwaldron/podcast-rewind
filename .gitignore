@@ -503,5 +503,13 @@ FodyWeavers.xsd
 
 ##############################
 ### Project-specific rules ###
+
+# Data files
 _DataFiles
+
+# Environment settings files
 appsettings.*.json
+
+# SonarLint Rider plugin
+.idea/**/sonarlint/
+.idea/**/sonarlint-state.xml
