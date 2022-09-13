@@ -1,33 +1,36 @@
 ﻿@page
 @model CreateModel
 @{
-    ViewData["Title"] = $"Create Podcast ⏪ Rewind for {Model.PodcastTitle}";
+    ViewData["Title"] = $"Create Podcast\u2009⏪\u2009Rewind for {Model.PodcastTitle}";
 }
 
 <h1>
-    Create Podcast ⏪ Rewind Feed for:<br />
+    Create Podcast&#x2009;⏪&#x2009;Rewind Feed for:<br />
     <em>@Model.PodcastTitle</em>
 </h1>
 
 @if (Model.PodcastEpisodes.Count > 0)
 {
     <form method="post">
-    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-    <div class="mb-3">
-        <label class="form-label" asp-for="CreateFeedRewind.DateOfKeyEntry"></label>
-        <input class="form-control" asp-for="CreateFeedRewind.DateOfKeyEntry" />
-        <br />
-        <label class="form-label" asp-for="CreateFeedRewind.Interval"></label>
-        <input class="form-control" asp-for="CreateFeedRewind.Interval" />
-    </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="CreateFeedRewind.DateOfKeyEntry"></label>
+            <input class="form-control" asp-for="CreateFeedRewind.DateOfKeyEntry" />
+            <span asp-validation-for="CreateFeedRewind.DateOfKeyEntry" class="text-danger"></span>
+            <br />
+            <label class="form-label" asp-for="CreateFeedRewind.Interval"></label>
+            <input class="form-control" asp-for="CreateFeedRewind.Interval" />
+            <span asp-validation-for="CreateFeedRewind.Interval" class="text-danger"></span>
+        </div>
 
-    @Html.DisplayNameFor(m => m.CreateFeedRewind.KeyEntryId)
+        @Html.DisplayNameFor(m => m.CreateFeedRewind.KeyEntryId)
+        <span asp-validation-for="CreateFeedRewind.KeyEntryId" class="text-danger"></span>
 
-    <div class="vh-50 overflow-scroll mb-3">
-        <div class="card">
-            <ul class="list-group list-group-flush">
-                @foreach (var episode in Model.PodcastEpisodes)
+        <div class="vh-50 overflow-scroll mb-3">
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    @foreach (var episode in Model.PodcastEpisodes)
                     {
                         <li class="list-group-item p-0">
                             <div class="form-check mb-0">
@@ -41,6 +44,7 @@
                 </ul>
             </div>
         </div>
+
         <input type="hidden" asp-for="CreateFeedRewind.FeedUrl" />
         <button class="btn btn-primary" type="submit">Generate Podcast Rewind Feed</button>
     </form>

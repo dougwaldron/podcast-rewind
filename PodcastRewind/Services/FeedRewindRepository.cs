@@ -1,4 +1,5 @@
-using PodcastRewind.Models;
+using PodcastRewind.Models.DTOs;
+using PodcastRewind.Models.Entities;
 using System.Text.Json;
 
 namespace PodcastRewind.Services;

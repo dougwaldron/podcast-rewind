@@ -1,32 +1,36 @@
 ﻿@page "{id:Guid?}"
 @model EditModel
 @{
-    ViewData["Title"] = $"Edit Settings for Podcast ⏪ Rewind for {Model.PodcastTitle}";
+    ViewData["Title"] = $"Edit Podcast\u2009⏪\u2009Rewind settings for {Model.PodcastTitle}";
 }
 
 <h1>
-    Edit Settings for Podcast ⏪ Rewind Feed for:<br />
+    Edit Settings for Podcast&#x2009;⏪&#x2009;Rewind Feed for:<br />
     <em>@Model.PodcastTitle</em>
 </h1>
 
 @if (Model.PodcastEpisodes.Count > 0)
 {
     <form method="post">
-    <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-    <div class="mb-3">
-        <label class="form-label" asp-for="EditFeedRewind.DateOfKeyEntry"></label>
-        <input class="form-control" asp-for="EditFeedRewind.DateOfKeyEntry" />
-        <br />
-        <label class="form-label" asp-for="EditFeedRewind.Interval"></label>
-        <input class="form-control" asp-for="EditFeedRewind.Interval" />
-    </div>
+        <div class="mb-3">
+            <label class="form-label" asp-for="EditFeedRewind.DateOfKeyEntry"></label>
+            <input class="form-control" asp-for="EditFeedRewind.DateOfKeyEntry" />
+            <span asp-validation-for="EditFeedRewind.DateOfKeyEntry" class="text-danger"></span>
+            <br />
+            <label class="form-label" asp-for="EditFeedRewind.Interval"></label>
+            <input class="form-control" asp-for="EditFeedRewind.Interval" />
+            <span asp-validation-for="EditFeedRewind.Interval" class="text-danger"></span>
+        </div>
 
-    @Html.DisplayNameFor(m => m.EditFeedRewind.KeyEntryId)
-    <div class="vh-50 overflow-scroll mb-3">
-        <div class="card">
-            <ul class="list-group list-group-flush">
-                @foreach (var episode in Model.PodcastEpisodes)
+        @Html.DisplayNameFor(m => m.EditFeedRewind.KeyEntryId)
+        <span asp-validation-for="EditFeedRewind.KeyEntryId" class="text-danger"></span>
+
+        <div class="vh-50 overflow-scroll mb-3">
+            <div class="card">
+                <ul class="list-group list-group-flush">
+                    @foreach (var episode in Model.PodcastEpisodes)
                     {
                         <li class="list-group-item p-0">
                             <div class="form-check mb-0">

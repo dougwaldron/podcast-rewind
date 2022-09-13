@@ -1,13 +1,14 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace PodcastRewind.Models;
+namespace PodcastRewind.Models.DTOs;
 
 public class CreateFeedRewindDto
 {
+    [Required]
     [Display(Name = "Feed URL")]
     public string FeedUrl { get; init; } = string.Empty;
 
-    [Required]
+    [Required(ErrorMessage = "One episode must be selected.")]
     [Display(Name = "Episode to set as latest")]
     public string KeyEntryId { get; init; } = string.Empty;
 
@@ -16,6 +17,7 @@ public class CreateFeedRewindDto
     public DateTime DateOfKeyEntry { get; init; } = DateTime.Today;
 
     [Required]
+    [Range(1, 365, ErrorMessage = "The interval must be between {1} and {2} days.")]
     [Display(Name = "Days between episodes")]
     public int Interval { get; init; } = 7;
 }

@@ -1,16 +1,16 @@
 ﻿@page "{id:Guid?}"
 @model DetailsModel
 @{
-    ViewData["Title"] = $"Podcast ⏪ Rewind for {Model.FeedRewindData.OriginalFeedTitle}";
+    ViewData["Title"] = $"Podcast\u2009⏪\u2009Rewind for {Model.FeedRewindData.OriginalFeedTitle}";
 }
 
 <h1>
     <img class="img-fluid rounded-start float-start" height="100" width="100" alt="" src="@Model.FeedRewindData.RewoundFeed!.ImageUrl?.ToString()" />
-    Podcast ⏪ Rewind for:<br />
+    Podcast&#x2009;⏪&#x2009;Rewind for:<br />
     <em>@Model.FeedRewindData.OriginalFeedTitle</em>
 </h1>
 
-<a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.FeedRewindData.FeedRewind.Id">Edit Podcast ⏪ Rewind Settings</a>
+<a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.FeedRewindData.FeedRewind.Id">Edit Podcast&#x2009;⏪&#x2009;Rewind Settings</a>
 
 <p>Rewind Feed URL: @Model.RewindFeedUrl</p>
 

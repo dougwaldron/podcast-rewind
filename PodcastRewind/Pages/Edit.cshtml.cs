@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PodcastRewind.Models;
+using PodcastRewind.Models.DTOs;
 using PodcastRewind.Services;
 using System.ServiceModel.Syndication;
 using System.Xml;

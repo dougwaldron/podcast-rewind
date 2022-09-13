@@ -1,3 +1,4 @@
+using PodcastRewind.Models.Entities;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Xml;
@@ -40,11 +41,11 @@ public class FeedRewindData
         var keyIndex = entries.FindIndex(e => e.Id == FeedRewind.KeyEntryId);
         var dateOfFirstEntry = FeedRewind.DateOfKeyEntry.AddDays(-FeedRewind.Interval * (keyIndex));
 
-        for (int i = 0; i < feedItemsCount; i++)
+        for (var i = 0; i < feedItemsCount; i++)
             entries[i].PublishDate = dateOfFirstEntry.AddDays(FeedRewind.Interval * i);
 
         RewoundFeed = OriginalFeed.Clone(true);
-        RewoundFeed.Title = new TextSyndicationContent($"⏪\u2009Rewind: {RewoundFeed.Title.Text}");
+        RewoundFeed.Title = new TextSyndicationContent($"⏪: {RewoundFeed.Title.Text}");
 
         var descriptionType = OriginalFeed.Description.Type switch
         {

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ServiceModel.Syndication;
 using System.Text.RegularExpressions;
 
-namespace PodcastRewind.Models;
+namespace PodcastRewind.Models.DTOs;
 
 public class ViewPodcastEpisodeDto
 {

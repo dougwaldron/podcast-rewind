@@ -1,4 +1,4 @@
-namespace PodcastRewind.Models;
+namespace PodcastRewind.Models.Entities;
 
 public class FeedRewind
 {
