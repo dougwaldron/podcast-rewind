@@ -15,6 +15,7 @@ public class EditFeedRewindDto
     public string KeyEntryId { get; init; } = string.Empty;
 
     [Required]
+    [DataType(DataType.Date)]
     [Display(Name = "Rewind selected episode to")]
     public DateTime DateOfKeyEntry { get; init; }
 
