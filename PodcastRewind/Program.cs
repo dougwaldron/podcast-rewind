@@ -2,13 +2,13 @@ using PodcastRewind.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.WebHost.UseSentry();
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddTransient<IFeedRewindRepository, FeedRewindRepository>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
@@ -19,7 +19,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
-// Maybe UseAuthorization
+app.UseSentryTracing();
 app.MapRazorPages();
 app.MapControllers();
 
