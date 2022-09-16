@@ -18,10 +18,16 @@ public class CreateModel : PageModel
     public string PodcastTitle { get; private set; } = string.Empty;
     public List<ViewPodcastEpisodeDto> PodcastEpisodes { get; private set; } = new();
 
-    public IActionResult OnGet(string? feedUrl)
+    public async Task<IActionResult> OnGetAsync(string? feedUrl)
     {
         if (feedUrl is null) return NotFound();
-        using var xmlReader = XmlReader.Create(feedUrl);
+
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
+
+        using var stream = await client.GetStreamAsync(feedUrl);
+        using var xmlReader = XmlReader.Create(stream);
+
         var feed = SyndicationFeed.Load(xmlReader);
         if (feed is null) return NotFound();
 

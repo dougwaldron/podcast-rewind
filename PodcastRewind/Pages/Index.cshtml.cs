@@ -24,7 +24,11 @@ public class IndexModel : PageModel
     public async Task<IActionResult> OnGetAsync(string? search)
     {
         if (search is null) return Page();
+        return await GetAsyncInternal(search);
+    }
 
+    public async Task<IActionResult> GetAsyncInternal(string search)
+    {
         // Default: retrieve 30 items using the US search
         try
         {
