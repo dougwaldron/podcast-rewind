@@ -15,13 +15,13 @@
 
 <div class="tab-content border border-top-0 p-4">
     <div class="tab-pane fade show active" id="search-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-        <form class="row row-cols-md-auto g-3 align-items-center pb-3 mb-4 bg-light rounded-2" method="get">
+        <form class="row row-cols-md-auto g-3 align-items-center" method="get">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
             <div class="col-12">
                 <label class="form-label" asp-for="Search"></label>
             </div>
             <div class="col-12">
-                <input class="form-control" asp-for="Search" />
+                <input class="form-control" asp-for="Search"/>
             </div>
             <div class="col-12">
                 <button type="submit" class="btn btn-primary">Search</button>
@@ -30,42 +30,39 @@
 
         @if (Model.SearchResults.Count > 0)
         {
-            <div class="row row-cols-1 row-cols-md-2 g-3 me-1">
+            <div class="row row-cols-1 row-cols-md-2 g-3 pb-3 mt-4 mb-4 bg-light rounded-3">
                 @foreach (var podcast in Model.SearchResults)
                 {
                     <div class="col">
-                        <div class="card shadow-sm h-100">
-                            <div class="row g-0 align-items-center">
-                                <div class="col-2">
-                                    <img class="img-fluid rounded-start" src="@podcast.ArtWork" height="100" width="100" alt="" />
-                                </div>
-                                <div class="col-7">
-                                    <div class="card-body pt-2 pb-2">
-                                        <div class="mb-0">@podcast.Name</div>
+                        <div class="card shadow-sm h-100 p-0">
+                            <a class="btn btn-outline-primary" asp-page="/Create" asp-route-feedUrl="@podcast.FeedUrl">
+                                <div class="row g-0 align-items-center">
+                                    <div class="col-2">
+                                        <img class="img-fluid rounded-start" src="@podcast.ArtWork" height="100" width="100" alt=""/>
+                                    </div>
+                                    <div class="col-10">
+                                        <div class="card-body pt-2 pb-2 text-start">@podcast.Name</div>
                                     </div>
                                 </div>
-                                <div class="col-3 text-end">
-                                    <a class="btn btn-outline-primary me-3" asp-page="/Create" asp-route-feedUrl="@podcast.FeedUrl">Select</a>
-                                </div>
-                            </div>
+                            </a>
                         </div>
                     </div>
                 }
             </div>
         }
     </div>
-</div>
 
-<div class="tab-pane fade" id="feed-url-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-    <form class="row row-cols-lg-auto g-3 align-items-center" method="get" asp-page="/Create">
-        <div class="col-12">
-            <label class="form-label" asp-for="FeedUrl"></label>
-        </div>
-        <div class="col-12">
-            <input class="form-control" asp-for="FeedUrl" />
-        </div>
-        <div class="col-12">
-            <button type="submit" class="btn btn-primary">Select Podcast</button>
-        </div>
-    </form>
+    <div class="tab-pane fade" id="feed-url-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
+        <form class="row row-cols-lg-auto g-3 align-items-center" method="get" asp-page="/Create">
+            <div class="col-12">
+                <label class="form-label" asp-for="FeedUrl"></label>
+            </div>
+            <div class="col-12">
+                <input class="form-control" asp-for="FeedUrl"/>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Select Podcast</button>
+            </div>
+        </form>
+    </div>
 </div>
