@@ -34,3 +34,5 @@ body {
 .list-group-item .form-check-label:focus {
   background-color: rgb(133, 235, 255);
 }
+
+.btn img {width: 1em;}
