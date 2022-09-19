@@ -29,8 +29,12 @@ body {
   overflow-y: scroll !important;
 }
 
-
 .list-group-item .form-check-label:hover,
 .list-group-item .form-check-label:focus {
   background-color: rgb(133, 235, 255);
+}
+
+.btn-icon img {
+  height: 1.5rem;
+  vertical-align: text-top;
 }
