@@ -42,34 +42,26 @@ public class FeedRewindData
         var dateOfFirstEntry = FeedRewind.DateOfKeyEntry.AddDays(-FeedRewind.Interval * (keyIndex));
 
         for (var i = 0; i < feedItemsCount; i++)
+        {
+            var originalPublishDate = entries[i].PublishDate;
             entries[i].PublishDate = dateOfFirstEntry.AddDays(FeedRewind.Interval * i);
+            entries[i].Summary = new TextSyndicationContent(string.Concat(
+                $"[Originally published {originalPublishDate.ToString("MMMM d, yyyy")}.] ",
+                entries[i].Summary.Text));
+        }
 
         RewoundFeed = OriginalFeed.Clone(true);
         RewoundFeed.Title = new TextSyndicationContent($"⏪: {RewoundFeed.Title.Text}");
 
-        var descriptionType = OriginalFeed.Description.Type switch
-        {
-            "html" => TextSyndicationContentKind.Html,
-            "xhtml" => TextSyndicationContentKind.XHtml,
-            _ => TextSyndicationContentKind.Plaintext,
-        };
+        var newDescription = string.Concat(
+            "<p>This is a Podcast\u2009⏪\u2009Rewind feed. More information can be found at " +
+            $"the <a href='{_feedPage}.'>Feed Page</a>.</p>",
+            RewoundFeed.Description.Text);
 
-        var newDescription = OriginalFeed.Description.Type switch
-        {
-            "html" or "xhtml" => string.Concat(
-                "This is a Podcast\u2009⏪\u2009Rewind feed. More information can be found at " +
-                $"the <a href='{_feedPage}.'>Feed Page</a>.<br /><br />",
-                RewoundFeed.Description.Text),
-            _ => string.Concat(
-                "This is a Podcast\u2009⏪\u2009Rewind feed. More information about this feed " +
-                $"can be found at {_feedPage} .", Environment.NewLine, Environment.NewLine,
-                RewoundFeed.Description.Text),
-        };
-
-        RewoundFeed.Description = new TextSyndicationContent(newDescription, descriptionType);
+        RewoundFeed.Description = new TextSyndicationContent(newDescription, TextSyndicationContentKind.Html);
 
         RewoundFeed.Items = entries.Where(e => e.PublishDate <= DateTimeOffset.Now)
-                .OrderByDescending(e => e.PublishDate);
+            .OrderByDescending(e => e.PublishDate);
 
         if (_loadScheduledFeed)
         {
