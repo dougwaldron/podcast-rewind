@@ -10,17 +10,15 @@
     <em>@Model.FeedRewindData.OriginalFeedTitle</em>
 </h1>
 
-<div>
-    <a class="btn" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" width="16px" alt="" aria-hidden="true" /> RSS link</a>
-    <a class="btn" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" width="16px" alt="" aria-hidden="true" /> Subscribe in Overcast</a>
-    <a class="btn" href="feed://@Model.RewindFeedUrl"><img src="/img/rss.svg" width="16px" alt="" aria-hidden="true" /> "feed" link</a>
-    <a class="btn" href="podcast://@Model.RewindFeedUrl"><img src="/img/rss.svg" width="16px" alt="" aria-hidden="true" /> "podcast" link</a>
-    <a class="btn" href="pcast://@Model.RewindFeedUrl"><img src="/img/rss.svg" width="16px" alt="" aria-hidden="true" /> "pcast" link</a>
-</div>
+<p>
+    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
+    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true" /> Subscribe in Overcast</a>
+    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="podcast://@Model.RewindFeedUrl"><img src="/img/apple-podcasts.svg" alt="Listen on Apple Podcasts" /></a>
+</p>
 
-<div>
+<p>
     <a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.FeedRewindData.FeedRewind.Id">Edit Podcast&#x2009;⏪&#x2009;Rewind Settings</a>
-</div>
+</p>
 
 <div class="row">
     <div class="col-lg">
