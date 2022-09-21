@@ -8,9 +8,9 @@ namespace PodcastRewind.Models;
 public class FeedRewindData
 {
     private readonly bool _loadScheduledFeed;
-    private Uri? FeedPageUri { get; set; }
+    private Uri? FeedPageUri { get; }
 
-    public FeedRewindData(FeedRewind feedRewind, string feedPage, bool loadScheduledFeed = false)
+    public FeedRewindData(FeedRewind feedRewind, string? feedPage, bool loadScheduledFeed = false)
     {
         _loadScheduledFeed = loadScheduledFeed;
         FeedPageUri = feedPage is null ? null : new Uri(feedPage);
@@ -46,7 +46,7 @@ public class FeedRewindData
             var originalPublishDate = entries[i].PublishDate;
             entries[i].PublishDate = dateOfFirstEntry.AddDays(FeedRewind.Interval * i);
             entries[i].Summary = new TextSyndicationContent(string.Concat(
-                $"[Originally published {originalPublishDate.ToString("MMMM d, yyyy")}.] ",
+                $"[Originally published {originalPublishDate:MMMM d, yyyy}.] ",
                 entries[i].Summary.Text));
         }
 
@@ -73,16 +73,14 @@ public class FeedRewindData
         };
 
         RewoundFeed.Description = new TextSyndicationContent(newDescription, descriptionType);
-
         RewoundFeed.Items = entries.Where(e => e.PublishDate <= DateTimeOffset.Now)
             .OrderByDescending(e => e.PublishDate);
 
-        if (_loadScheduledFeed)
-        {
-            ScheduledFeed = OriginalFeed.Clone(true);
-            ScheduledFeed.Items = entries.Where(e => e.PublishDate > DateTimeOffset.Now)
-                .OrderBy(e => e.PublishDate);
-        }
+        if (!_loadScheduledFeed) return;
+        
+        ScheduledFeed = OriginalFeed.Clone(true);
+        ScheduledFeed.Items = entries.Where(e => e.PublishDate > DateTimeOffset.Now)
+            .OrderBy(e => e.PublishDate);
     }
 
     public byte[] GetRewoundFeed()
