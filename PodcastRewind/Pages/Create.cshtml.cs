@@ -25,7 +25,7 @@ public class CreateModel : PageModel
         using var client = new HttpClient();
         client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
 
-        using var stream = await client.GetStreamAsync(feedUrl);
+        await using var stream = await client.GetStreamAsync(feedUrl);
         using var xmlReader = XmlReader.Create(stream);
 
         var feed = SyndicationFeed.Load(xmlReader);

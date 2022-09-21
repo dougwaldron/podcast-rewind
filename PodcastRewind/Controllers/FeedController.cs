@@ -18,9 +18,9 @@ public class FeedController : ControllerBase
         if (id is null) return Problem($"Feed ID missing.", statusCode: 404);
         var feed = await _repository.GetAsync(id.Value);
         if (feed is null) return Problem($"Feed ID '{id}' not found.", statusCode: 404);
-        
+
         var feedPage = Url.PageLink("/Details", values: new { id })!;
         var feedRewindData = new FeedRewindData(feed, feedPage);
-        return File(feedRewindData.GetRewoundFeed(), "application/rss+xml; charset=utf-8");
+        return File(await feedRewindData.GetRewoundFeedAsBytesAsync(), "application/rss+xml; charset=utf-8");
     }
 }

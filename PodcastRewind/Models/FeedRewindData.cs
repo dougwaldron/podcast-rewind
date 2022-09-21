@@ -1,4 +1,5 @@
 using PodcastRewind.Models.Entities;
+using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Xml;
@@ -7,53 +8,57 @@ namespace PodcastRewind.Models;
 
 public class FeedRewindData
 {
-    private readonly bool _loadScheduledFeed;
-    private Uri? FeedPageUri { get; }
+    private readonly FeedRewind _feedRewind;
+    private readonly Uri? _feedPageUri;
 
-    public FeedRewindData(FeedRewind feedRewind, string? feedPage, bool loadScheduledFeed = false)
+    public FeedRewindData(FeedRewind feedRewind, string? feedPageLink)
     {
-        _loadScheduledFeed = loadScheduledFeed;
-        FeedPageUri = feedPage is null ? null : new Uri(feedPage);
-        FeedRewind = feedRewind;
-        LoadFeed();
+        _feedRewind = feedRewind;
+        _feedPageUri = feedPageLink is null ? null : new Uri(feedPageLink);
     }
 
+    public string FeedTitle { get; private set; } = string.Empty;
+
     private SyndicationFeed? OriginalFeed { get; set; }
+    private SyndicationFeed? RewoundFeed { get; set; }
+    private SyndicationFeed? ScheduledFeed { get; set; }
+    private List<SyndicationItem> RewoundEntries { get; set; } = new();
 
-    public bool OriginalFeedIsNull { get; private set; } = true;
-    public string OriginalFeedTitle { get; private set; } = string.Empty;
-    public FeedRewind FeedRewind { get; private set; }
-    public SyndicationFeed? RewoundFeed { get; private set; }
-    public SyndicationFeed? ScheduledFeed { get; private set; }
-
-    private void LoadFeed()
+    public async Task<SyndicationFeed?> GetRewoundFeedAsync()
     {
-        if (string.IsNullOrEmpty(FeedRewind.FeedUrl)) return;
-        using var xmlReader = XmlReader.Create(FeedRewind.FeedUrl);
-        OriginalFeed = SyndicationFeed.Load(xmlReader);
-        if (OriginalFeed is null) return;
+        if (RewoundFeed is null) await LoadRewoundFeedAsync();
+        return RewoundFeed;
+    }
 
-        OriginalFeedIsNull = false;
-        OriginalFeedTitle = OriginalFeed.Title.Text;
+    public async Task<SyndicationFeed?> GetScheduledFeedAsync()
+    {
+        if (ScheduledFeed is null) await LoadScheduledFeedAsync();
+        return ScheduledFeed;
+    }
 
-        var entries = OriginalFeed.Items.OrderBy(e => e.PublishDate).ToList();
-        var feedItemsCount = entries.Count;
-        var keyIndex = entries.FindIndex(e => e.Id == FeedRewind.KeyEntryId);
-        var dateOfFirstEntry = FeedRewind.DateOfKeyEntry.AddDays(-FeedRewind.Interval * (keyIndex));
+    private async Task LoadRewoundFeedAsync()
+    {
+        if (string.IsNullOrEmpty(_feedRewind.FeedUrl)) return;
+        if (OriginalFeed is null && !await LoadOriginalFeedAsync()) return;
+
+        RewoundEntries = OriginalFeed!.Items.OrderBy(e => e.PublishDate).ToList();
+        var feedItemsCount = RewoundEntries.Count;
+        var keyIndex = RewoundEntries.FindIndex(e => e.Id == _feedRewind.KeyEntryId);
+        var dateOfFirstEntry = _feedRewind.DateOfKeyEntry.AddDays(-_feedRewind.Interval * (keyIndex));
 
         for (var i = 0; i < feedItemsCount; i++)
         {
-            var originalPublishDate = entries[i].PublishDate;
-            entries[i].PublishDate = dateOfFirstEntry.AddDays(FeedRewind.Interval * i);
-            entries[i].Summary = new TextSyndicationContent(string.Concat(
+            var originalPublishDate = RewoundEntries[i].PublishDate;
+            RewoundEntries[i].PublishDate = dateOfFirstEntry.AddDays(_feedRewind.Interval * i);
+            RewoundEntries[i].Summary = new TextSyndicationContent(string.Concat(
                 $"[Originally published {originalPublishDate:MMMM d, yyyy}.] ",
-                entries[i].Summary.Text));
+                RewoundEntries[i].Summary.Text));
         }
 
         RewoundFeed = OriginalFeed.Clone(true);
         RewoundFeed.Title = new TextSyndicationContent($"⏪: {RewoundFeed.Title.Text}");
-        if (FeedPageUri is not null)
-            RewoundFeed.Links.Insert(0, SyndicationLink.CreateAlternateLink(FeedPageUri, "text/html"));
+        if (_feedPageUri is not null)
+            RewoundFeed.Links.Insert(0, SyndicationLink.CreateAlternateLink(_feedPageUri, "text/html"));
 
         var descriptionType = OriginalFeed.Description.Type switch
         {
@@ -73,18 +78,38 @@ public class FeedRewindData
         };
 
         RewoundFeed.Description = new TextSyndicationContent(newDescription, descriptionType);
-        RewoundFeed.Items = entries.Where(e => e.PublishDate <= DateTimeOffset.Now)
+        RewoundFeed.Items = RewoundEntries.Where(e => e.PublishDate <= DateTimeOffset.Now)
             .OrderByDescending(e => e.PublishDate);
+    }
 
-        if (!_loadScheduledFeed) return;
-        
-        ScheduledFeed = OriginalFeed.Clone(true);
-        ScheduledFeed.Items = entries.Where(e => e.PublishDate > DateTimeOffset.Now)
+    private async Task LoadScheduledFeedAsync()
+    {
+        if (string.IsNullOrEmpty(_feedRewind.FeedUrl)) return;
+        if (OriginalFeed is null && !await LoadOriginalFeedAsync()) return;
+        ScheduledFeed = OriginalFeed!.Clone(true);
+        ScheduledFeed.Items = RewoundEntries.Where(e => e.PublishDate > DateTimeOffset.Now)
             .OrderBy(e => e.PublishDate);
     }
 
-    public byte[] GetRewoundFeed()
+    [MemberNotNullWhen(true, nameof(OriginalFeed))]
+    private async Task<bool> LoadOriginalFeedAsync()
     {
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
+
+        await using var stream = await client.GetStreamAsync(_feedRewind.FeedUrl);
+        using var xmlReader = XmlReader.Create(stream);
+
+        OriginalFeed = SyndicationFeed.Load(xmlReader);
+        if (OriginalFeed is null) return false;
+        FeedTitle = OriginalFeed.Title.Text;
+
+        return true;
+    }
+
+    public async Task<byte[]> GetRewoundFeedAsBytesAsync()
+    {
+        if (RewoundFeed is null) await LoadRewoundFeedAsync();
         if (RewoundFeed is null) return Array.Empty<byte>();
 
         var settings = new XmlWriterSettings
@@ -92,15 +117,16 @@ public class FeedRewindData
             Encoding = Encoding.UTF8,
             NewLineHandling = NewLineHandling.Entitize,
             NewLineOnAttributes = false,
-            Indent = false
+            Indent = false,
+            Async = true,
         };
 
         using var stream = new MemoryStream();
-        using var xmlWriter = XmlWriter.Create(stream, settings);
+        await using var xmlWriter = XmlWriter.Create(stream, settings);
 
         var formatter = new Rss20FeedFormatter(RewoundFeed, false);
         formatter.WriteTo(xmlWriter);
-        xmlWriter.Flush();
+        await xmlWriter.FlushAsync();
 
         return stream.ToArray();
     }

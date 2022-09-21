@@ -1,34 +1,39 @@
 ﻿@page "{id:Guid?}"
 @model DetailsModel
 @{
-    ViewData["Title"] = $"Podcast\u2009⏪\u2009Rewind for {Model.FeedRewindData.OriginalFeedTitle}";
+    ViewData["Title"] = $"Podcast\u2009⏪\u2009Rewind for {Model.FeedRewindData.FeedTitle}";
 }
 
 <h1>
-    <img class="img-fluid rounded-start float-start" height="100" width="100" alt="" src="@Model.FeedRewindData.RewoundFeed!.ImageUrl?.ToString()" />
+    @if (Model.RewoundFeed != null && Model.RewoundFeed.ImageUrl != null)
+    {
+        <img class="img-fluid rounded-start float-start" height="100" width="100" alt="" src="@Model.RewoundFeed.ImageUrl.ToString()" />
+    }
     Podcast&#x2009;⏪&#x2009;Rewind for:<br />
-    <em>@Model.FeedRewindData.OriginalFeedTitle</em>
+    <em>@Model.FeedRewindData.FeedTitle</em>
 </h1>
 
 <p>
     <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
     <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true" /> Subscribe in Overcast</a>
-    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="podcast://@Model.RewindFeedUrl"><img src="/img/apple-podcasts.svg" alt="Listen on Apple Podcasts" /></a>
+    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="podcast://@Model.RewindFeedUrl">
+        <img src="/img/apple-podcasts.svg" alt="Listen on Apple Podcasts" />
+    </a>
 </p>
 
 <p>
-    <a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.FeedRewindData.FeedRewind.Id">Edit Podcast&#x2009;⏪&#x2009;Rewind Settings</a>
+    <a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.RewindFeedId">Edit Podcast&#x2009;⏪&#x2009;Rewind Settings</a>
 </p>
 
 <div class="row">
     <div class="col-lg">
         <h3>Rewound Episodes So Far</h3>
-        @if (Model.FeedRewindData.RewoundFeed.Items.Any())
+        @if (Model.RewoundFeed != null && Model.RewoundFeed.Items.Any())
         {
             <div class="vh-50 overflow-scroll-y mb-3 border border-3 border-secondary rounded">
                 <div class="card">
                     <ul class="list-group list-group-flush">
-                        @foreach (var episode in Model.FeedRewindData.RewoundFeed.Items)
+                        @foreach (var episode in Model.RewoundFeed.Items)
                         {
                             <li class="list-group-item p-0">
                                 @Html.DisplayFor(m => episode.PublishDate): <strong>@episode.Title.Text</strong>
@@ -46,12 +51,12 @@
 
     <div class="col-lg">
         <h3>Upcoming Episodes</h3>
-        @if (Model.FeedRewindData.ScheduledFeed!.Items.Count() > 0)
+        @if (Model.ScheduledFeed != null && Model.ScheduledFeed.Items.Any())
         {
             <div class="vh-50 overflow-scroll-y mb-3 border border-3 border-secondary rounded">
                 <div class="card">
                     <ul class="list-group list-group-flush">
-                        @foreach (var episode in Model.FeedRewindData.ScheduledFeed.Items)
+                        @foreach (var episode in Model.ScheduledFeed.Items)
                         {
                             <li class="list-group-item p-0">
                                 @Html.DisplayFor(m => episode.PublishDate): <strong>@episode.Title.Text</strong>

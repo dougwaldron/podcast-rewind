@@ -27,7 +27,7 @@
         @Html.DisplayNameFor(m => m.EditFeedRewind.KeyEntryId)
         <span asp-validation-for="EditFeedRewind.KeyEntryId" class="text-danger"></span>
 
-        <div class="vh-50 overflow-scroll mb-3">
+        <div class="vh-50 overflow-scroll-y mb-3 border border-3 border-secondary rounded">
             <div class="card">
                 <ul class="list-group list-group-flush">
                     @foreach (var episode in Model.PodcastEpisodes)
