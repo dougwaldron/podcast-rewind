@@ -1,6 +1,6 @@
 namespace PodcastRewind.Models.Entities;
 
-public class FeedRewind
+public class FeedRewindInfo
 {
     public Guid Id { get; init; }
     public string FeedUrl { get; init; } = string.Empty;

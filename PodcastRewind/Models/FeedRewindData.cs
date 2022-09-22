@@ -8,12 +8,12 @@ namespace PodcastRewind.Models;
 
 public class FeedRewindData
 {
-    private readonly FeedRewind _feedRewind;
+    private readonly FeedRewindInfo _feedRewindInfo;
     private readonly Uri? _feedPageUri;
 
-    public FeedRewindData(FeedRewind feedRewind, string? feedPageLink)
+    public FeedRewindData(FeedRewindInfo feedRewindInfo, string? feedPageLink)
     {
-        _feedRewind = feedRewind;
+        _feedRewindInfo = feedRewindInfo;
         _feedPageUri = feedPageLink is null ? null : new Uri(feedPageLink);
     }
 
@@ -38,18 +38,18 @@ public class FeedRewindData
 
     private async Task LoadRewoundFeedAsync()
     {
-        if (string.IsNullOrEmpty(_feedRewind.FeedUrl)) return;
+        if (string.IsNullOrEmpty(_feedRewindInfo.FeedUrl)) return;
         if (OriginalFeed is null && !await LoadOriginalFeedAsync()) return;
 
         RewoundEntries = OriginalFeed!.Items.OrderBy(e => e.PublishDate).ToList();
         var feedItemsCount = RewoundEntries.Count;
-        var keyIndex = RewoundEntries.FindIndex(e => e.Id == _feedRewind.KeyEntryId);
-        var dateOfFirstEntry = _feedRewind.DateOfKeyEntry.AddDays(-_feedRewind.Interval * (keyIndex));
+        var keyIndex = RewoundEntries.FindIndex(e => e.Id == _feedRewindInfo.KeyEntryId);
+        var dateOfFirstEntry = _feedRewindInfo.DateOfKeyEntry.AddDays(-_feedRewindInfo.Interval * (keyIndex));
 
         for (var i = 0; i < feedItemsCount; i++)
         {
             var originalPublishDate = RewoundEntries[i].PublishDate;
-            RewoundEntries[i].PublishDate = dateOfFirstEntry.AddDays(_feedRewind.Interval * i);
+            RewoundEntries[i].PublishDate = dateOfFirstEntry.AddDays(_feedRewindInfo.Interval * i);
             RewoundEntries[i].Summary = new TextSyndicationContent(string.Concat(
                 $"[Originally published {originalPublishDate:MMMM d, yyyy}.] ",
                 RewoundEntries[i].Summary.Text));
@@ -84,7 +84,7 @@ public class FeedRewindData
 
     private async Task LoadScheduledFeedAsync()
     {
-        if (string.IsNullOrEmpty(_feedRewind.FeedUrl)) return;
+        if (string.IsNullOrEmpty(_feedRewindInfo.FeedUrl)) return;
         if (OriginalFeed is null && !await LoadOriginalFeedAsync()) return;
         ScheduledFeed = OriginalFeed!.Clone(true);
         ScheduledFeed.Items = RewoundEntries.Where(e => e.PublishDate > DateTimeOffset.Now)
@@ -97,7 +97,7 @@ public class FeedRewindData
         using var client = new HttpClient();
         client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
 
-        await using var stream = await client.GetStreamAsync(_feedRewind.FeedUrl);
+        await using var stream = await client.GetStreamAsync(_feedRewindInfo.FeedUrl);
         using var xmlReader = XmlReader.Create(stream);
 
         OriginalFeed = SyndicationFeed.Load(xmlReader);

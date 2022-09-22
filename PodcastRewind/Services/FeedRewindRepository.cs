@@ -8,7 +8,7 @@ public interface IFeedRewindRepository
 {
     Task<Guid> SaveAsync(CreateFeedRewindDto create);
     Task UpdateAsync(EditFeedRewindDto edit);
-    Task<FeedRewind?> GetAsync(Guid id);
+    Task<FeedRewindInfo?> GetAsync(Guid id);
 }
 
 public class FeedRewindRepository : IFeedRewindRepository
@@ -19,7 +19,7 @@ public class FeedRewindRepository : IFeedRewindRepository
     {
         var id = Guid.NewGuid();
 
-        var feedRewind = new FeedRewind
+        var feedRewind = new FeedRewindInfo
         {
             Id = id,
             FeedUrl = create.FeedUrl,
@@ -42,7 +42,7 @@ public class FeedRewindRepository : IFeedRewindRepository
         var original = await GetAsync(edit.Id);
         if (original is null) throw new ArgumentException($"Item {edit.Id} does not exist.", nameof(edit));
 
-        var feedRewind = new FeedRewind
+        var feedRewind = new FeedRewindInfo
         {
             Id = edit.Id,
             FeedUrl = edit.FeedUrl,
@@ -58,14 +58,14 @@ public class FeedRewindRepository : IFeedRewindRepository
         await stream.DisposeAsync();
     }
 
-    public async Task<FeedRewind?> GetAsync(Guid id)
+    public async Task<FeedRewindInfo?> GetAsync(Guid id)
     {
         var filePath = Path.Combine(DataFilesDirectory, string.Concat(id.ToString(), ".json"));
 
         try
         {
             await using var stream = File.OpenRead(filePath);
-            return await JsonSerializer.DeserializeAsync<FeedRewind>(stream);
+            return await JsonSerializer.DeserializeAsync<FeedRewindInfo>(stream);
         }
         catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
         {
