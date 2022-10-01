@@ -48,11 +48,14 @@ public class FeedRewindData
 
         for (var i = 0; i < feedItemsCount; i++)
         {
-            var originalPublishDate = RewoundEntries[i].PublishDate;
-            RewoundEntries[i].PublishDate = dateOfFirstEntry.AddDays(_feedRewindInfo.Interval * i);
-            RewoundEntries[i].Summary = new TextSyndicationContent(string.Concat(
-                $"[Originally published {originalPublishDate:MMMM d, yyyy}.] ",
-                RewoundEntries[i].Summary.Text));
+            var pubDate = RewoundEntries[i].PublishDate;
+            var newPubDate = new DateTimeOffset(dateOfFirstEntry, pubDate.Offset)
+                .Add(pubDate.TimeOfDay)
+                .AddDays(_feedRewindInfo.Interval * i);
+
+            RewoundEntries[i].PublishDate = newPubDate;
+            RewoundEntries[i].Summary = new TextSyndicationContent(
+                $"[⏪\u2009Originally published {pubDate:MMMM d, yyyy}.] {RewoundEntries[i].Summary.Text}");
         }
 
         RewoundFeed = OriginalFeed.Clone(true);
