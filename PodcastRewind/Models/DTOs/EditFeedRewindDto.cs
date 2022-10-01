@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace PodcastRewind.Models.DTOs;
 
@@ -13,6 +14,7 @@ public class EditFeedRewindDto
     [Required(ErrorMessage = "One episode must be selected.")]
     [Display(Name = "Episode to set as latest")]
     public string KeyEntryId { get; init; } = string.Empty;
+    public string NormalizedId => Regex.Replace(KeyEntryId, "([^a-zA-Z0-9])", "-");
 
     [Required]
     [DataType(DataType.Date)]

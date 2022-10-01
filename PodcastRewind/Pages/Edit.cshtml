@@ -46,6 +46,13 @@
         </div>
         <input type="hidden" asp-for="EditFeedRewind.FeedUrl" />
         <input type="hidden" asp-for="EditFeedRewind.Id" />
-        <button class="btn btn-primary" type="submit">Update Podcast Rewind Feed Settings</button>
+        <button type="submit" class="btn btn-primary col-sm-3 me-2">Save Changes</button>
+        <a asp-page="Details" asp-route-id="@Model.EditFeedRewind.Id" class="btn btn-outline-secondary col-md-2">Cancel</a>
     </form>
+}
+
+@section Scripts{
+    <script>
+    document.getElementById("e-@Model.EditFeedRewind.NormalizedId").closest("li").scrollIntoView({block:"nearest"});
+    </script>
 }

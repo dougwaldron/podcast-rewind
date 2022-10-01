@@ -21,10 +21,16 @@ public class EditModel : PageModel
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id is null) return RedirectToPage("/Index");
-        var feedRewind = await _repository.GetAsync(id.Value);
-        if (feedRewind is null) return NotFound($"Feed ID '{id}' not found.");
+        var feedRewindInfo = await _repository.GetAsync(id.Value);
+        if (feedRewindInfo is null) return NotFound($"Feed ID '{id}' not found.");
 
-        var feed = await FeedRewindData.GetSyndicationFeedAsync(feedRewind.FeedUrl);
+        var feedRewindData = new FeedRewindData(feedRewindInfo);
+        var rewoundFeed = await feedRewindData.GetRewoundFeedAsync();
+        if (rewoundFeed is null) return NotFound($"Feed ID '{id}' not found.");
+        
+        var latestRewindEpisode = rewoundFeed.Items.FirstOrDefault();
+        
+        var feed = await feedRewindData.GetOriginalFeedAsync();
         if (feed is null) return NotFound();
 
         LoadData(feed);
@@ -33,11 +39,11 @@ public class EditModel : PageModel
         {
             EditFeedRewind = new EditFeedRewindDto
             {
-                Id = feedRewind.Id,
-                FeedUrl = feedRewind.FeedUrl,
-                KeyEntryId = feedRewind.KeyEntryId,
-                DateOfKeyEntry = feedRewind.DateOfKeyEntry,
-                Interval = feedRewind.Interval,
+                Id = feedRewindInfo.Id,
+                FeedUrl = feedRewindInfo.FeedUrl,
+                KeyEntryId = latestRewindEpisode?.Id ?? feedRewindInfo.KeyEntryId,
+                DateOfKeyEntry = latestRewindEpisode?.PublishDate.Date ?? feedRewindInfo.DateOfKeyEntry,
+                Interval = feedRewindInfo.Interval,
             };
         }
 

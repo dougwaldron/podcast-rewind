@@ -11,7 +11,7 @@ public class FeedRewindData
     private readonly FeedRewindInfo _feedRewindInfo;
     private readonly Uri? _feedPageUri;
 
-    public FeedRewindData(FeedRewindInfo feedRewindInfo, string? feedPageLink)
+    public FeedRewindData(FeedRewindInfo feedRewindInfo, string? feedPageLink = null)
     {
         _feedRewindInfo = feedRewindInfo;
         _feedPageUri = feedPageLink is null ? null : new Uri(feedPageLink);
@@ -34,6 +34,12 @@ public class FeedRewindData
     {
         if (ScheduledFeed is null) await LoadScheduledFeedAsync();
         return ScheduledFeed;
+    }
+
+    public async Task<SyndicationFeed?> GetOriginalFeedAsync()
+    {
+        if (OriginalFeed is null) await LoadOriginalFeedAsync();
+        return OriginalFeed;
     }
 
     private async Task LoadRewoundFeedAsync()

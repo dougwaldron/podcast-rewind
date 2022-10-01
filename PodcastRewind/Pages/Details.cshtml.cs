@@ -20,11 +20,11 @@ public class DetailsModel : PageModel
         Guid? id)
     {
         if (id is null) return RedirectToPage("/Index");
-        var feed = await repository.GetAsync(id.Value);
-        if (feed is null) return NotFound($"Feed ID '{id}' not found.");
+        var feedRewindInfo = await repository.GetAsync(id.Value);
+        if (feedRewindInfo is null) return NotFound($"Feed ID '{id}' not found.");
 
         var feedPage = Url.PageLink("Details", values: new { id })!;
-        FeedRewindData = new FeedRewindData(feed, feedPage);
+        FeedRewindData = new FeedRewindData(feedRewindInfo, feedPage);
         RewoundFeed = await FeedRewindData.GetRewoundFeedAsync();
 
         if (RewoundFeed is null) return NotFound($"Feed could not be loaded.");
