@@ -14,7 +14,13 @@
 </h1>
 
 <p>
-    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
+    <div class="btn-group" role="group">
+        <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 rss-link-button" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
+        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 rss-clipboard-button" 
+                onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl">
+            <img src="/img/clipboard.svg" alt="" aria-hidden="true"/>
+        </button>
+    </div>
     <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true" /> Subscribe in Overcast</a>
     <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="@Model.ApplePodcastSubscribeUrl">
         <img src="/img/apple-podcasts.svg" alt="Listen on Apple Podcasts" />
