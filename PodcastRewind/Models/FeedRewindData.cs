@@ -97,17 +97,20 @@ public class FeedRewindData
     [MemberNotNullWhen(true, nameof(OriginalFeed))]
     private async Task<bool> LoadOriginalFeedAsync()
     {
-        using var client = new HttpClient();
-        client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
-
-        await using var stream = await client.GetStreamAsync(_feedRewindInfo.FeedUrl);
-        using var xmlReader = XmlReader.Create(stream);
-
-        OriginalFeed = SyndicationFeed.Load(xmlReader);
+        OriginalFeed = await GetSyndicationFeedAsync(_feedRewindInfo.FeedUrl);
         if (OriginalFeed is null) return false;
         FeedTitle = OriginalFeed.Title.Text;
 
         return true;
+    }
+
+    public static async Task<SyndicationFeed?> GetSyndicationFeedAsync(string url)
+    {
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
+        await using var stream = await client.GetStreamAsync(url);
+        using var xmlReader = XmlReader.Create(stream);
+        return SyndicationFeed.Load(xmlReader);
     }
 
     public async Task<byte[]> GetRewoundFeedAsBytesAsync()

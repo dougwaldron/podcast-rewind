@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PodcastRewind.Models;
 using PodcastRewind.Models.DTOs;
 using PodcastRewind.Services;
 using System.ServiceModel.Syndication;
-using System.Xml;
 
 namespace PodcastRewind.Pages;
 
@@ -24,8 +24,7 @@ public class EditModel : PageModel
         var feedRewind = await _repository.GetAsync(id.Value);
         if (feedRewind is null) return NotFound($"Feed ID '{id}' not found.");
 
-        using var xmlReader = XmlReader.Create(feedRewind.FeedUrl);
-        var feed = SyndicationFeed.Load(xmlReader);
+        var feed = await FeedRewindData.GetSyndicationFeedAsync(feedRewind.FeedUrl);
         if (feed is null) return NotFound();
 
         LoadData(feed);
@@ -45,17 +44,14 @@ public class EditModel : PageModel
         return Page();
     }
 
-
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
-            using var xmlReader = XmlReader.Create(EditFeedRewind.FeedUrl);
-            var feed = SyndicationFeed.Load(xmlReader);
+            var feed = await FeedRewindData.GetSyndicationFeedAsync(EditFeedRewind.FeedUrl);
             if (feed is null) return NotFound();
 
             LoadData(feed);
-
             return Page();
         }
 

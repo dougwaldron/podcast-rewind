@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using PodcastRewind.Models;
 using PodcastRewind.Models.DTOs;
 using PodcastRewind.Services;
 using System.ServiceModel.Syndication;
-using System.Xml;
 
 namespace PodcastRewind.Pages;
 
@@ -21,14 +21,7 @@ public class CreateModel : PageModel
     public async Task<IActionResult> OnGetAsync(string? feedUrl)
     {
         if (feedUrl is null) return NotFound();
-
-        using var client = new HttpClient();
-        client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
-
-        await using var stream = await client.GetStreamAsync(feedUrl);
-        using var xmlReader = XmlReader.Create(stream);
-
-        var feed = SyndicationFeed.Load(xmlReader);
+        var feed = await FeedRewindData.GetSyndicationFeedAsync(feedUrl);
         if (feed is null) return NotFound();
 
         LoadData(feed);
@@ -49,12 +42,10 @@ public class CreateModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            using var xmlReader = XmlReader.Create(CreateFeedRewind.FeedUrl);
-            var feed = SyndicationFeed.Load(xmlReader);
+            var feed = await FeedRewindData.GetSyndicationFeedAsync(CreateFeedRewind.FeedUrl);
             if (feed is null) return NotFound();
 
             LoadData(feed);
-
             return Page();
         }
 
