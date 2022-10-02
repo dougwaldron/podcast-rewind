@@ -1,37 +1,40 @@
 ﻿@page "{id:Guid?}"
+@using PodcastRewind.Models
 @model DetailsModel
 @{
-    ViewData["Title"] = $"Podcast\u2009⏪\u2009Rewind for {Model.FeedRewindData.FeedTitle}";
+    ViewData["Title"] = $"{Constants.Logo} for {Model.FeedRewindData.FeedTitle}";
 }
 
 <h1>
+    <span class="pr-logo">@Constants.Logo</span> for:<br />
+</h1>
+
+<h2>
     @if (Model.RewoundFeed != null && Model.RewoundFeed.ImageUrl != null)
     {
         <img class="img-fluid rounded-start float-start" height="100" width="100" alt="" src="@Model.RewoundFeed.ImageUrl.ToString()" />
     }
-    Podcast&#x2009;⏪&#x2009;Rewind for:<br />
     <em>@Model.FeedRewindData.FeedTitle</em>
-</h1>
+</h2>
 
-<p>
+<div class="mb-2">
     <div class="btn-group me-1" role="group">
         <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
-        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" 
+        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark"
                 onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl"
-                aria-label="Copy RSS link to clipboard"
-                >
-            <img src="/img/clipboard.svg" alt="" aria-hidden="true"/>
+                aria-label="Copy RSS link to clipboard">
+            <img src="/img/clipboard.svg" alt="" aria-hidden="true" />
         </button>
     </div>
     <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true" /> Subscribe in Overcast</a>
     <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="@Model.ApplePodcastSubscribeUrl">
         <img src="/img/apple-podcasts.svg" alt="Listen on Apple Podcasts" />
     </a>
-</p>
+</div>
 
-<p>
-    <a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.RewindFeedId">Edit Podcast&#x2009;⏪&#x2009;Rewind Settings</a>
-</p>
+<div class="mb-2">
+    <a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.RewindFeedId">Edit <span class="pr-logo">@Constants.Logo</span> Settings</a>
+</div>
 
 <div class="row">
     <div class="col-lg">

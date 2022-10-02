@@ -38,3 +38,8 @@ body {
   height: 1.5rem;
   vertical-align: text-top;
 }
+
+.pr-logo{
+  font-variant: unicase;
+  font-weight: 500;
+}

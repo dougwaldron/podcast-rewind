@@ -1,68 +1,59 @@
 ﻿@page
+@using PodcastRewind.Models
 @model IndexModel
 @{
-    ViewData["Title"] = "Podcast\u2009⏪\u2009Rewind";
+    ViewData["Title"] = Constants.Logo;
 }
+<h1>
+    <span class="pr-logo">@Constants.Logo</span>
+</h1>
 
-<ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#search-tab-pane" type="button" role="tab" aria-controls="search-tab-pane" aria-selected="true">Search for a Podcast</button>
+<p>
+    Have you ever come across a great podcast with a huge back catalog and wished there was
+    an easy way to catch up on old episodes? Most podcast listening apps let you download old
+    episodes, but you have to manage them manually, which can be a tedious process.
+</p>
+
+<p class="lead">
+    Introducing <span class="pr-logo">@Constants.Logo</span>! Now you can rewind a podcast and
+    let your app deliver old episodes as if they were new.
+</p>
+
+<p>
+    Here's how it works: You pick which
+    episode to start with (maybe you've already listened to a few) and how often you want new
+    episodes to come out. <span class="pr-logo">@Constants.Logo</span> will provide you with a
+    new podcast feed that you can subscribe to in your favorite podcast listening app.
+</p>
+
+<p>Here are some examples to get you started:</p>
+
+<ul>
+    <li>
+        <p>
+            Listen to
+            <a asp-page="Setup" asp-route-interval="7" asp-route-feedUrl="http://feeds.nightvalepresents.com/welcometonightvalepodcast">Welcome To Night Vale from the beginning</a>
+            with a new episode each week. (You'll be caught up in about four years!)
+        </p>
     </li>
-    <li class="nav-item" role="presentation">
-        <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#feed-url-tab-pane" type="button" role="tab" aria-controls="feed-url-tab-pane" aria-selected="false">Enter Feed URL</button>
+    <li>
+        <p>
+            Learn with a
+            <a asp-page="Setup" asp-route-interval="1" asp-route-feedUrl="https://rss.acast.com/coffeebreakfrench">daily French lesson from Coffee Break French</a>.
+        </p>
+    </li>
+    <li>
+        <p>
+            Find a re-watch podcast for a favorite TV show like
+            <a asp-page="Setup" asp-route-feedUrl="https://feeds.simplecast.com/PxEW_ipK">The Office Ladies</a>
+            and watch along at your own pace.
+        </p>
     </li>
 </ul>
 
-<div class="tab-content border border-top-0 p-4">
-    <div class="tab-pane fade show active" id="search-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-        <form class="row row-cols-md-auto g-3 align-items-center" method="get">
-            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
-            <div class="col-12">
-                <label class="form-label" asp-for="Search"></label>
-            </div>
-            <div class="col-12">
-                <input autofocus class="form-control" asp-for="Search" />
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Search</button>
-            </div>
-        </form>
+<p>
+    If your new feed starts to get too far ahead (or fall behind) and you want to change your pace,
+    simply click the link in your podcast app to edit the rewind settings.
+</p>
 
-        @if (Model.SearchResults.Count > 0)
-        {
-            <div class="row row-cols-1 row-cols-md-2 g-3 pb-3 mt-4 mb-4 bg-light rounded-3">
-                @foreach (var podcast in Model.SearchResults)
-                {
-                    <div class="col">
-                        <div class="card shadow-sm h-100 p-0">
-                            <a class="btn btn-outline-primary" asp-page="/Create" asp-route-feedUrl="@podcast.FeedUrl">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-2">
-                                        <img class="img-fluid rounded-start" src="@podcast.ArtWork" height="100" width="100" alt="" />
-                                    </div>
-                                    <div class="col-10">
-                                        <div class="card-body pt-2 pb-2 text-start">@podcast.Name</div>
-                                    </div>
-                                </div>
-                            </a>
-                        </div>
-                    </div>
-                }
-            </div>
-        }
-    </div>
-
-    <div class="tab-pane fade" id="feed-url-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-        <form class="row row-cols-lg-auto g-3 align-items-center" method="get" asp-page="/Create">
-            <div class="col-12">
-                <label class="form-label" asp-for="FeedUrl"></label>
-            </div>
-            <div class="col-12">
-                <input class="form-control" asp-for="FeedUrl" />
-            </div>
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Select Podcast</button>
-            </div>
-        </form>
-    </div>
-</div>
+<p class="lead"><a asp-page="Search">Search for a podcast</a> and try it now!</p>

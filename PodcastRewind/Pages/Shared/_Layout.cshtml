@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using PodcastRewind.Models
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -18,7 +19,7 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Podcast&#x2009;⏪&#x2009;Rewind</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index"><span class="pr-logo">@Constants.Logo</span></a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -43,7 +44,9 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2022 - Doug Waldron - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            Made by <a href="https://github.com/dougwaldron">Doug Waldron</a> &#x2000;&middot;&#x2000;
+            Source code on <a href="https://github.com/dougwaldron/podcast-rewind"><img class="align-baseline" src="/img/github.svg" alt="" aria-hidden="true" /> GitHub</a> &#x2000;&middot;&#x2000;
+            <a asp-page="/Privacy">Privacy Policy</a>
         </div>
     </footer>
 

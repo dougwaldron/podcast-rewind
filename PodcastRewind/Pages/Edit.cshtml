@@ -1,11 +1,12 @@
 ﻿@page "{id:Guid?}"
+@using PodcastRewind.Models
 @model EditModel
 @{
-    ViewData["Title"] = $"Edit Podcast\u2009⏪\u2009Rewind settings for {Model.PodcastTitle}";
+    ViewData["Title"] = $"Edit {Constants.Logo} settings for {Model.PodcastTitle}";
 }
 
 <h1>
-    Edit Settings for Podcast&#x2009;⏪&#x2009;Rewind Feed for:<br />
+    Edit Settings for <span class="pr-logo">@Constants.Logo</span> Feed for:<br />
     <em>@Model.PodcastTitle</em>
 </h1>
 
