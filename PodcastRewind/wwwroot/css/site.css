@@ -38,9 +38,3 @@ body {
   height: 1.5rem;
   vertical-align: text-top;
 }
-.rss-link-button.me-1 {
-  margin-right: unset !important;
-}
-.rss-clipboard-button.me-1 {
-  margin-left: -1px !important;
-}

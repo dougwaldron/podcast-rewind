@@ -14,10 +14,12 @@
 </h1>
 
 <p>
-    <div class="btn-group" role="group">
-        <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 rss-link-button" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
-        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 rss-clipboard-button" 
-                onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl">
+    <div class="btn-group me-1" role="group">
+        <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
+        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" 
+                onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl"
+                aria-label="Copy RSS link to clipboard"
+                >
             <img src="/img/clipboard.svg" alt="" aria-hidden="true"/>
         </button>
     </div>
