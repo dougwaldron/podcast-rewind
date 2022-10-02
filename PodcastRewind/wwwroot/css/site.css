@@ -43,3 +43,27 @@ body {
   font-variant: unicase;
   font-weight: 500;
 }
+
+/* Skip to content link
+-------------------------------------------------- */
+.skip-nav {
+  background: transparent;
+  color: #212121;
+  text-decoration: underline;
+  left: 0;
+  padding: 1rem 1.5rem;
+  position: absolute;
+  top: -4.2rem;
+  transition: all 0.2s ease-in-out;
+  z-index: 100;
+}
+
+.skip-nav:focus {
+  background: #fff;
+  left: 0;
+  outline: 0;
+  box-shadow: 0 0 3px #1B98CA, 0 0 7px #1B98CA;
+  position: absolute;
+  top: 0;
+  transition: all 0.2s ease-in-out;
+}
