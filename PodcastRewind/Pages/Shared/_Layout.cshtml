@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using PodcastRewind.Models
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -15,43 +16,38 @@
 </head>
 
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">Podcast&#x2009;⏪&#x2009;Rewind</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
+<a class="skip-nav" href="#main-content">Skip to main content</a>
+<header>
+    <nav class="navbar navbar-light bg-primary bg-opacity-25 border-bottom shadow-sm mb-3">
         <div class="container">
-            &copy; 2022 - Doug Waldron - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            <a class="navbar-brand" asp-page="/Index" title="Home">
+                <span class="pr-logo">@Constants.Logo</span>
+            </a>
+            <div class="bg-light rounded-2">
+                <a class="btn btn-primary border-2" asp-page="/Search">Create a New Podcast Rewind</a>
+            </div>
         </div>
-    </footer>
+    </nav>
+</header>
+<div class="container">
+    <main role="main" id="main-content" class="pb-3">
+        @RenderBody()
+    </main>
+</div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+<footer class="border-top footer text-muted">
+    <div class="container mt-3">
+        Made by <a href="https://github.com/dougwaldron">Doug Waldron</a> &#x2000;&middot;&#x2000;
+        Source code on <a href="https://github.com/dougwaldron/podcast-rewind"><img class="align-baseline" src="/img/github.svg" alt="" aria-hidden="true" /> GitHub</a> &#x2000;&middot;&#x2000;
+        <a asp-page="/Privacy">Privacy Policy</a>
+    </div>
+</footer>
 
-    @await RenderSectionAsync("Scripts", required: false)
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 
 </html>

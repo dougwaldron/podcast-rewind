@@ -1,41 +1,54 @@
 ﻿@page "{id:Guid?}"
+@using PodcastRewind.Models
 @model DetailsModel
 @{
-    ViewData["Title"] = $"Podcast\u2009⏪\u2009Rewind for {Model.FeedRewindData.FeedTitle}";
+    ViewData["Title"] = $"{Constants.Logo} for {Model.FeedRewindData.FeedTitle}";
 }
 
-<h1>
-    @if (Model.RewoundFeed != null && Model.RewoundFeed.ImageUrl != null)
+<h1><span class="pr-logo">@Constants.Logo</span> for:</h1>
+
+<div class="d-flex flex-row justify-content-start align-items-center mb-3 bg-warning bg-opacity-10">
+    @if (!string.IsNullOrEmpty(Model.PodcastImageUrl))
     {
-        <img class="img-fluid rounded-start float-start" height="100" width="100" alt="" src="@Model.RewoundFeed.ImageUrl.ToString()" />
+        <img class="img-fluid rounded-start me-2" src="@Model.PodcastImageUrl" height="100" width="100" alt="" />
     }
-    Podcast&#x2009;⏪&#x2009;Rewind for:<br />
-    <em>@Model.FeedRewindData.FeedTitle</em>
-</h1>
+    <h2>@Model.FeedRewindData.FeedTitle</h2>
+</div>
 
 <p>
-    <div class="btn-group me-1" role="group">
-        <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
-        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" 
-                onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl"
-                aria-label="Copy RSS link to clipboard"
-                >
-            <img src="/img/clipboard.svg" alt="" aria-hidden="true"/>
-        </button>
-    </div>
-    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true" /> Subscribe in Overcast</a>
-    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1" href="@Model.ApplePodcastSubscribeUrl">
+    Your <span class="pr-logo">@Constants.Logo</span> feed is ready! Use the buttons below to subscribe in your
+    favorite podcast listening app. Most apps require you to paste a link to the RSS feed. Click the clipboard
+    button below to quickly copy the link.
+</p>
+
+<div>
+    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 mb-3" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true" /> Subscribe in Overcast</a>
+    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 mb-3" href="@Model.ApplePodcastSubscribeUrl">
         <img src="/img/apple-podcasts.svg" alt="Listen on Apple Podcasts" />
     </a>
-</p>
+    <div class="btn-group me-1 mb-3" role="group">
+        <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
+        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark"
+                onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl" 
+                aria-label="Copy RSS link to clipboard" title="Copy RSS link to clipboard">
+            <img src="/img/clipboard.svg" alt="" aria-hidden="true" />
+        </button>
+    </div>
+</div>
 
 <p>
-    <a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.RewindFeedId">Edit Podcast&#x2009;⏪&#x2009;Rewind Settings</a>
+    If you want to adjust the settings, click the Edit button. (The new feed includes a link back to this page, 
+    so you can easily come back here whenever you need to.)
 </p>
+
+<div class="mb-3">
+    <a class="btn btn-outline-primary" asp-page="Edit" asp-route-id="@Model.RewindFeedId">Edit Rewind Settings</a>
+</div>
 
 <div class="row">
     <div class="col-lg">
         <h3>Rewound Episodes So Far</h3>
+        <p>(These episodes will show up as available in your podcast app.)</p>
         @if (Model.RewoundFeed != null && Model.RewoundFeed.Items.Any())
         {
             <div class="vh-50 overflow-scroll-y mb-3 border border-3 border-secondary rounded">
@@ -59,6 +72,7 @@
 
     <div class="col-lg">
         <h3>Upcoming Episodes</h3>
+        <p>(These episodes will automatically show up later in your podcast app on the dates listed.)</p>
         @if (Model.ScheduledFeed != null && Model.ScheduledFeed.Items.Any())
         {
             <div class="vh-50 overflow-scroll-y mb-3 border border-3 border-secondary rounded">

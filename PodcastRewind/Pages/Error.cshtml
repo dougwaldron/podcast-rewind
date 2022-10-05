@@ -1,10 +1,11 @@
 ﻿@page
+@using PodcastRewind.Models
 @model ErrorModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = $"Error | {Constants.Logo}";
 }
 
-<h1 class="text-danger">Error.</h1>
+<h1 class="text-danger">Error</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
 
 @if (Model.ShowRequestId)

@@ -9,4 +9,3 @@ public class PrivacyModel : PageModel
         // Nothing to see here.
     }
 }
-
