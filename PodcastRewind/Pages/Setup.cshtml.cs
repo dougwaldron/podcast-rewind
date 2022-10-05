@@ -16,11 +16,14 @@ public class SetupModel : PageModel
     public CreateFeedRewindDto CreateFeedRewind { get; set; } = null!;
 
     public string PodcastTitle { get; private set; } = string.Empty;
+    public string PodcastImageUrl { get; private set; } = string.Empty;
     public List<ViewPodcastEpisodeDto> PodcastEpisodes { get; private set; } = new();
 
     public async Task<IActionResult> OnGetAsync(string? feedUrl, int interval = 7)
     {
         if (feedUrl is null) return NotFound();
+        if (!Uri.IsWellFormedUriString(feedUrl, UriKind.Absolute)) return BadRequest("The feed URL is invalid.");
+        
         var feed = await FeedRewindData.GetSyndicationFeedAsync(feedUrl);
         if (feed is null) return NotFound();
 
@@ -59,5 +62,6 @@ public class SetupModel : PageModel
         PodcastTitle = feed.Title.Text;
         PodcastEpisodes = feed.Items.Select(e => new ViewPodcastEpisodeDto(e))
             .OrderBy(e => e.PublishDate).ToList();
+        PodcastImageUrl = feed.ImageUrl?.ToString() ?? "";
     }
 }

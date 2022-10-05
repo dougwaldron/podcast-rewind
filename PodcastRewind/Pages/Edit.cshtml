@@ -5,29 +5,27 @@
     ViewData["Title"] = $"Edit {Constants.Logo} settings for {Model.PodcastTitle}";
 }
 
-<h1>
-    Edit Settings for <span class="pr-logo">@Constants.Logo</span> Feed for:<br />
-    <em>@Model.PodcastTitle</em>
-</h1>
+<h1>Edit the <span class="pr-logo">@Constants.Logo</span> settings for:</h1>
 
-@if (Model.PodcastEpisodes.Count > 0)
+<div class="d-flex flex-row justify-content-start align-items-center mb-3 bg-warning bg-opacity-10">
+    @if (!string.IsNullOrEmpty(Model.PodcastImageUrl))
+    {
+        <img class="img-fluid rounded-start me-2" src="@Model.PodcastImageUrl" height="100" width="100" alt="" />
+    }
+    <h2>@Model.PodcastTitle</h2>
+</div>
+
+@if (Model.PodcastEpisodes.Count == 0)
+{
+    <p>This podcast feed doesn't seem to have any episodes!</p>
+}
+else
 {
     <form method="post">
         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-        <div class="mb-3">
-            <label class="form-label" asp-for="EditFeedRewind.DateOfKeyEntry"></label>
-            <input class="form-control" asp-for="EditFeedRewind.DateOfKeyEntry" />
-            <span asp-validation-for="EditFeedRewind.DateOfKeyEntry" class="text-danger"></span>
-            <br />
-            <label class="form-label" asp-for="EditFeedRewind.Interval"></label>
-            <input class="form-control" asp-for="EditFeedRewind.Interval" inputmode="numeric" />
-            <span asp-validation-for="EditFeedRewind.Interval" class="text-danger"></span>
-        </div>
-
-        @Html.DisplayNameFor(m => m.EditFeedRewind.KeyEntryId)
+        <div class="fw-semibold mb-2">@Html.DisplayNameFor(m => m.EditFeedRewind.KeyEntryId)</div>
         <span asp-validation-for="EditFeedRewind.KeyEntryId" class="text-danger"></span>
-
         <div class="vh-50 overflow-scroll-y mb-3 border border-3 border-secondary rounded">
             <div class="card">
                 <ul class="list-group list-group-flush">
@@ -45,10 +43,24 @@
                 </ul>
             </div>
         </div>
+
+        <div class="row align-items-end">
+            <div class="col-md mb-3">
+                <label class="form-label fw-semibold" asp-for="EditFeedRewind.DateOfKeyEntry"></label>
+                <input class="form-control form-control-lg" asp-for="EditFeedRewind.DateOfKeyEntry" />
+                <span asp-validation-for="EditFeedRewind.DateOfKeyEntry" class="text-danger"></span>
+            </div>
+            <div class="col-md mb-3">
+                <label class="form-label fw-semibold" asp-for="EditFeedRewind.Interval"></label>
+                <input class="form-control form-control-lg" asp-for="EditFeedRewind.Interval" inputmode="numeric" />
+                <span asp-validation-for="EditFeedRewind.Interval" class="text-danger"></span>
+            </div>
+        </div>
+
         <input type="hidden" asp-for="EditFeedRewind.FeedUrl" />
         <input type="hidden" asp-for="EditFeedRewind.Id" />
-        <button type="submit" class="btn btn-primary col-sm-3 me-2">Save Changes</button>
-        <a asp-page="Details" asp-route-id="@Model.EditFeedRewind.Id" class="btn btn-outline-secondary col-md-2">Cancel</a>
+        <button type="submit" class="btn btn-primary btn-lg me-2">Save Changes</button>
+        <a asp-page="Details" asp-route-id="@Model.EditFeedRewind.Id" class="btn btn-outline-secondary btn-lg">Cancel</a>
     </form>
 }
 

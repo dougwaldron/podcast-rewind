@@ -5,20 +5,19 @@ namespace PodcastRewind.Models.DTOs;
 public class CreateFeedRewindDto
 {
     [Required]
-    [Display(Name = "Feed URL")]
     public string FeedUrl { get; init; } = string.Empty;
 
     [Required(ErrorMessage = "One episode must be selected.")]
-    [Display(Name = "Episode to set as latest")]
+    [Display(Name = "Episode to set as latest:")]
     public string KeyEntryId { get; init; } = string.Empty;
 
     [Required]
     [DataType(DataType.Date)]
-    [Display(Name = "Rewind selected episode to")]
+    [Display(Name = "Rewind selected episode to:")]
     public DateTime DateOfKeyEntry { get; init; } = DateTime.Today;
 
     [Required]
     [Range(1, 365, ErrorMessage = "The interval must be between {1} and {2} days.")]
-    [Display(Name = "Days between episodes")]
+    [Display(Name = "Days between episodes:")]
     public int Interval { get; init; } = 7;
 }

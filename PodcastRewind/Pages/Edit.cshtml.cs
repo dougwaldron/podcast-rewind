@@ -16,6 +16,7 @@ public class EditModel : PageModel
     public EditFeedRewindDto EditFeedRewind { get; set; } = null!;
 
     public string PodcastTitle { get; private set; } = string.Empty;
+    public string PodcastImageUrl { get; private set; } = string.Empty;
     public List<ViewPodcastEpisodeDto> PodcastEpisodes { get; private set; } = new();
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
@@ -27,9 +28,9 @@ public class EditModel : PageModel
         var feedRewindData = new FeedRewindData(feedRewindInfo);
         var rewoundFeed = await feedRewindData.GetRewoundFeedAsync();
         if (rewoundFeed is null) return NotFound($"Feed ID '{id}' not found.");
-        
+
         var latestRewindEpisode = rewoundFeed.Items.FirstOrDefault();
-        
+
         var feed = await feedRewindData.GetOriginalFeedAsync();
         if (feed is null) return NotFound();
 
@@ -70,5 +71,6 @@ public class EditModel : PageModel
         PodcastTitle = feed.Title.Text;
         PodcastEpisodes = feed.Items.Select(e => new ViewPodcastEpisodeDto(e))
             .OrderBy(e => e.PublishDate).ToList();
+        PodcastImageUrl = feed.ImageUrl?.ToString() ?? "";
     }
 }

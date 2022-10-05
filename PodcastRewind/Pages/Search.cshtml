@@ -16,7 +16,9 @@
 
 <div class="tab-content border border-top-0 p-4">
     <div class="tab-pane fade show active" id="search-tab-pane" role="tabpanel" aria-labelledby="home-tab" tabindex="0">
-        <form class="row row-cols-md-auto g-3 align-items-center" method="get">
+        <p>Enter the name of a podcast or some search terms (uses the iTunes podcast library).</p>
+
+        <form class="row row-cols-md-auto g-3 align-items-end" method="get">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
             <div class="col-12">
                 <label class="form-label" asp-for="Search"></label>
@@ -29,32 +31,43 @@
             </div>
         </form>
 
-        @if (Model.SearchResults.Count > 0)
+        @if (Model.ShowSearchResults)
         {
-            <div class="row row-cols-1 row-cols-md-2 g-3 pb-3 mt-4 mb-4 bg-light rounded-3">
-                @foreach (var podcast in Model.SearchResults)
+            <div class="row row-cols-1 row-cols-md-2 g-3 pb-3 mt-4 bg-light rounded-3">
+                <h4 class="mt-4 h4 col-md-12">Search Results</h4>
+
+                @if (Model.SearchResults.Count == 0)
                 {
-                    <div class="col">
-                        <div class="card shadow-sm h-100 p-0">
-                            <a class="btn btn-outline-primary" asp-page="/Setup" asp-route-feedUrl="@podcast.FeedUrl">
-                                <div class="row g-0 align-items-center">
-                                    <div class="col-2">
-                                        <img class="img-fluid rounded-start" src="@podcast.ArtWork" height="100" width="100" alt="" />
+                    <p>None.</p>
+                }
+                else
+                {
+                    @foreach (var podcast in Model.SearchResults)
+                    {
+                        <div class="col">
+                            <div class="card shadow-sm h-100 p-0">
+                                <a class="btn btn-outline-primary" asp-page="/Setup" asp-route-feedUrl="@podcast.FeedUrl">
+                                    <div class="row g-0 align-items-center">
+                                        <div class="col-2">
+                                            <img class="img-fluid rounded-start" src="@podcast.ArtWork" height="100" width="100" alt="" />
+                                        </div>
+                                        <div class="col-10">
+                                            <div class="card-body pt-2 pb-2 text-start">@podcast.Name</div>
+                                        </div>
                                     </div>
-                                    <div class="col-10">
-                                        <div class="card-body pt-2 pb-2 text-start">@podcast.Name</div>
-                                    </div>
-                                </div>
-                            </a>
+                                </a>
+                            </div>
                         </div>
-                    </div>
+                    }
                 }
             </div>
         }
     </div>
 
     <div class="tab-pane fade" id="feed-url-tab-pane" role="tabpanel" aria-labelledby="profile-tab" tabindex="0">
-        <form class="row row-cols-lg-auto g-3 align-items-center" method="get" asp-page="/Setup">
+        <p>If you have the direct URL for the podcast feed, you can enter it here.</p>
+
+        <form class="row row-cols-lg-auto g-3 align-items-end" method="get" asp-page="/Setup">
             <div class="col-12">
                 <label class="form-label" asp-for="FeedUrl"></label>
             </div>

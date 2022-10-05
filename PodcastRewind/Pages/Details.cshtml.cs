@@ -14,6 +14,7 @@ public class DetailsModel : PageModel
     public Guid RewindFeedId { get; private set; }
     public SyndicationFeed? RewoundFeed { get; private set; }
     public SyndicationFeed? ScheduledFeed { get; private set; }
+    public string PodcastImageUrl { get; private set; } = string.Empty;
 
     public async Task<IActionResult> OnGetAsync(
         [FromServices] IFeedRewindRepository repository,
@@ -33,7 +34,8 @@ public class DetailsModel : PageModel
         RewindFeedId = id.Value;
         RewindFeedUrl = Url.ActionLink("GetFeed", "Feed", new { id })!;
         ApplePodcastSubscribeUrl = Url.ActionLink("GetFeed", "Feed", new { id }, "podcast")!;
-        
+        PodcastImageUrl = RewoundFeed.ImageUrl?.ToString() ?? "";
+
         return Page();
     }
 }

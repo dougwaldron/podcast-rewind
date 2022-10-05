@@ -39,11 +39,14 @@ body {
   vertical-align: text-top;
 }
 
-.pr-logo{
+.pr-logo {
   font-variant: unicase;
   font-weight: 500;
 }
 
+.fw-semibold {
+  font-weight: 500;
+}
 /* Skip to content link
 -------------------------------------------------- */
 .skip-nav {

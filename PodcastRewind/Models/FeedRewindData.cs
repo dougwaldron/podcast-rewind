@@ -112,6 +112,7 @@ public class FeedRewindData
 
     public static async Task<SyndicationFeed?> GetSyndicationFeedAsync(string url)
     {
+        if (!Uri.IsWellFormedUriString(url, UriKind.Absolute)) return null;
         using var client = new HttpClient();
         client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
         await using var stream = await client.GetStreamAsync(url);
