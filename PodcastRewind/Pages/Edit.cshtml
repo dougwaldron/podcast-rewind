@@ -57,10 +57,12 @@ else
             </div>
         </div>
 
-        <input type="hidden" asp-for="EditFeedRewind.FeedUrl" />
-        <input type="hidden" asp-for="EditFeedRewind.Id" />
-        <button type="submit" class="btn btn-primary btn-lg me-2">Save Changes</button>
-        <a asp-page="Details" asp-route-id="@Model.EditFeedRewind.Id" class="btn btn-outline-secondary btn-lg">Cancel</a>
+        <div>
+            <input type="hidden" asp-for="EditFeedRewind.FeedUrl" />
+            <input type="hidden" asp-for="EditFeedRewind.Id" />
+            <button type="submit" class="btn btn-primary btn-lg me-2 mb-3">Save Changes</button>
+            <a asp-page="Details" asp-route-id="@Model.EditFeedRewind.Id" class="btn btn-outline-secondary btn-lg mb-3">Cancel</a>
+        </div>
     </form>
 }
 

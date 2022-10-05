@@ -67,8 +67,10 @@ else
             </div>
         </div>
 
-        <input type="hidden" asp-for="CreateFeedRewind.FeedUrl" />
-        <button class="btn btn-primary btn-lg me-2" type="submit">Generate Podcast Rewind Feed</button>
-        <a asp-page="Index" class="btn btn-outline-secondary btn-lg">Cancel</a>
+        <div>
+            <input type="hidden" asp-for="CreateFeedRewind.FeedUrl" />
+            <button class="btn btn-primary btn-lg me-2 mb-3" type="submit">Generate Podcast Rewind Feed</button>
+            <a asp-page="Index" class="btn btn-outline-secondary btn-lg mb-3">Cancel</a>
+        </div>
     </form>
 }
