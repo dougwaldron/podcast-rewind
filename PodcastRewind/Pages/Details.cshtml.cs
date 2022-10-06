@@ -10,6 +10,7 @@ public class DetailsModel : PageModel
 {
     public FeedRewindData FeedRewindData { get; private set; } = null!;
     public string RewindFeedUrl { get; private set; } = string.Empty;
+    public string? OriginalPodcastLink { get; private set; }
     public string ApplePodcastSubscribeUrl { get; private set; } = string.Empty;
     public Guid RewindFeedId { get; private set; }
     public SyndicationFeed? RewoundFeed { get; private set; }
@@ -35,6 +36,7 @@ public class DetailsModel : PageModel
         RewindFeedUrl = Url.ActionLink("GetFeed", "Feed", new { id })!;
         ApplePodcastSubscribeUrl = Url.ActionLink("GetFeed", "Feed", new { id }, "podcast")!;
         PodcastImageUrl = RewoundFeed.ImageUrl?.ToString() ?? "";
+        OriginalPodcastLink = FeedRewindData.OriginalFeedLink?.AbsoluteUri;
 
         return Page();
     }

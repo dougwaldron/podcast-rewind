@@ -18,6 +18,7 @@ public class FeedRewindData
     }
 
     public string FeedTitle { get; private set; } = string.Empty;
+    public Uri? OriginalFeedLink { get; private set; }
 
     private SyndicationFeed? OriginalFeed { get; set; }
     private SyndicationFeed? RewoundFeed { get; set; }
@@ -106,6 +107,7 @@ public class FeedRewindData
         OriginalFeed = await GetSyndicationFeedAsync(_feedRewindInfo.FeedUrl);
         if (OriginalFeed is null) return false;
         FeedTitle = OriginalFeed.Title.Text;
+        OriginalFeedLink = OriginalFeed.Links.FirstOrDefault(e => e.RelationshipType == "alternate")?.Uri;
 
         return true;
     }

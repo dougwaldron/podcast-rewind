@@ -12,7 +12,16 @@
     {
         <img class="img-fluid rounded-start me-2" src="@Model.PodcastImageUrl" height="100" width="100" alt="" />
     }
-    <h2>@Model.FeedRewindData.FeedTitle</h2>
+    @if (Model.OriginalPodcastLink != null)
+    {
+        <h2>
+            <a href="@Model.OriginalPodcastLink">@Model.FeedRewindData.FeedTitle</a>
+        </h2>
+    }
+    else
+    {
+        <h2>@Model.FeedRewindData.FeedTitle</h2>
+    }
 </div>
 
 <p>
@@ -29,7 +38,7 @@
     <div class="btn-group me-1 mb-3" role="group">
         <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
         <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark"
-                onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl" 
+                onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl"
                 aria-label="Copy RSS link to clipboard" title="Copy RSS link to clipboard">
             <img src="/img/clipboard.svg" alt="" aria-hidden="true" />
         </button>
@@ -37,7 +46,7 @@
 </div>
 
 <p>
-    If you want to adjust the settings, click the Edit button. (The new feed includes a link back to this page, 
+    If you want to adjust the settings, click the Edit button. (The new feed includes a link back to this page,
     so you can easily come back here whenever you need to.)
 </p>
 
