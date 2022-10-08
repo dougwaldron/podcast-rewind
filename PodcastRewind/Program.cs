@@ -7,6 +7,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddTransient<IFeedRewindRepository, FeedRewindRepository>();
 
+// Configure bundling and minification.
+builder.Services.AddWebOptimizer();
+
 var app = builder.Build();
 
 if (!app.Environment.IsDevelopment())
@@ -17,6 +20,7 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseWebOptimizer();
 app.UseStaticFiles();
 app.UseRouting();
 app.UseSentryTracing();
