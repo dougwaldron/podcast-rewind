@@ -17,6 +17,7 @@ public class FeedRewindData
         _feedPageUri = feedPageLink is null ? null : new Uri(feedPageLink);
     }
 
+    public const string FeedMimeType = "application/atom+xml; charset=utf-8";
     public string FeedTitle { get; private set; } = string.Empty;
     public Uri? OriginalFeedLink { get; private set; }
 
@@ -139,7 +140,7 @@ public class FeedRewindData
         using var stream = new MemoryStream();
         await using var xmlWriter = XmlWriter.Create(stream, settings);
 
-        var formatter = new Rss20FeedFormatter(RewoundFeed, false);
+        var formatter = new Atom10FeedFormatter(RewoundFeed);
         formatter.WriteTo(xmlWriter);
         await xmlWriter.FlushAsync();
 

@@ -21,6 +21,6 @@ public class FeedController : ControllerBase
 
         var feedPage = Url.PageLink("/Details", values: new { id })!;
         var feedRewindData = new FeedRewindData(feed, feedPage);
-        return File(await feedRewindData.GetRewoundFeedAsBytesAsync(), "application/rss+xml; charset=utf-8");
+        return File(await feedRewindData.GetRewoundFeedAsBytesAsync(), FeedRewindData.FeedMimeType);
     }
 }
