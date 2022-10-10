@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PodcastRewind.Models;
 using PodcastRewind.Models.DTOs;
 using PodcastRewind.Services;
 using System.ServiceModel.Syndication;
@@ -10,7 +9,13 @@ namespace PodcastRewind.Pages;
 public class SetupModel : PageModel
 {
     private readonly IFeedRewindRepository _repository;
-    public SetupModel(IFeedRewindRepository repository) => _repository = repository;
+    private readonly ISyndicationFeedService _syndicationFeedService;
+
+    public SetupModel(IFeedRewindRepository repository, ISyndicationFeedService syndicationFeedService)
+    {
+        _repository = repository;
+        _syndicationFeedService = syndicationFeedService;
+    }
 
     [BindProperty]
     public CreateFeedRewindDto CreateFeedRewind { get; set; } = null!;
@@ -24,7 +29,7 @@ public class SetupModel : PageModel
         if (feedUrl is null) return BadRequest("No feed URL entered.");
         if (!Uri.IsWellFormedUriString(feedUrl, UriKind.Absolute)) return BadRequest("The feed URL is invalid.");
 
-        var feed = await FeedRewindData.GetSyndicationFeedAsync(feedUrl);
+        var feed = await _syndicationFeedService.GetSyndicationFeedAsync(feedUrl);
         if (feed is null) return NotFound();
 
         LoadData(feed);
@@ -46,7 +51,7 @@ public class SetupModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            var feed = await FeedRewindData.GetSyndicationFeedAsync(CreateFeedRewind.FeedUrl);
+            var feed = await _syndicationFeedService.GetSyndicationFeedAsync(CreateFeedRewind.FeedUrl);
             if (feed is null) return NotFound();
 
             LoadData(feed);

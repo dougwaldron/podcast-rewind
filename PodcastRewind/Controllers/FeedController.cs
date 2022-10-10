@@ -9,18 +9,30 @@ namespace PodcastRewind.Controllers;
 public class FeedController : ControllerBase
 {
     private readonly IFeedRewindRepository _repository;
-    public FeedController(IFeedRewindRepository repository) => _repository = repository;
+    private readonly ISyndicationFeedService _syndicationFeedService;
+
+    public FeedController(
+        IFeedRewindRepository repository,
+        ISyndicationFeedService syndicationFeedService)
+    {
+        _repository = repository;
+        _syndicationFeedService = syndicationFeedService;
+    }
+
 
     [HttpGet("{id:guid}")]
     [ResponseCache(Duration = 1200)]
     public async Task<IActionResult> GetFeedAsync(Guid? id)
     {
         if (id is null) return Problem($"Feed ID missing.", statusCode: 404);
-        var feed = await _repository.GetAsync(id.Value);
-        if (feed is null) return Problem($"Feed ID '{id}' not found.", statusCode: 404);
+        var feedRewindInfo = await _repository.GetAsync(id.Value);
+        if (feedRewindInfo is null) return Problem($"Feed ID '{id}' not found.", statusCode: 404);
+
+        var originalFeed = await _syndicationFeedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
+        if (originalFeed is null) return NotFound();
 
         var feedPage = Url.PageLink("/Details", values: new { id })!;
-        var feedRewindData = new FeedRewindData(feed, feedPage);
+        var feedRewindData = new FeedRewindData(feedRewindInfo, originalFeed, feedPage);
         return File(await feedRewindData.GetRewoundFeedAsBytesAsync(), FeedRewindData.FeedMimeType);
     }
 }

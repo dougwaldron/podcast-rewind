@@ -1,13 +1,17 @@
 using PodcastRewind.Services;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseSentry();
+
+builder.Services.AddHttpClient("Polly")
+    .AddTransientHttpErrorPolicy(policyBuilder =>
+        policyBuilder.WaitAndRetryAsync(2, retryNumber => TimeSpan.FromMilliseconds(600)));
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddTransient<IFeedRewindRepository, FeedRewindRepository>();
-
-// Configure bundling and minification.
+builder.Services.AddTransient<ISyndicationFeedService, SyndicationFeedService>();
 builder.Services.AddWebOptimizer();
 
 var app = builder.Build();

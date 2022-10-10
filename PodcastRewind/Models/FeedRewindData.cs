@@ -1,5 +1,4 @@
 using PodcastRewind.Models.Entities;
-using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Xml;
@@ -8,48 +7,52 @@ namespace PodcastRewind.Models;
 
 public class FeedRewindData
 {
+    public const string FeedMimeType = "application/atom+xml; charset=utf-8";
+
     private readonly FeedRewindInfo _feedRewindInfo;
+    private readonly SyndicationFeed _originalFeed;
     private readonly Uri? _feedPageUri;
 
-    public FeedRewindData(FeedRewindInfo feedRewindInfo, string? feedPageLink = null)
-    {
-        _feedRewindInfo = feedRewindInfo;
-        _feedPageUri = feedPageLink is null ? null : new Uri(feedPageLink);
-    }
-
-    public const string FeedMimeType = "application/atom+xml; charset=utf-8";
-    public string FeedTitle { get; private set; } = string.Empty;
+    public string FeedTitle { get; private set; }
     public Uri? OriginalFeedLink { get; private set; }
 
-    private SyndicationFeed? OriginalFeed { get; set; }
+    public FeedRewindData(
+        FeedRewindInfo feedRewindInfo,
+        SyndicationFeed originalFeed,
+        string? feedPageLink = null)
+    {
+        _feedRewindInfo = feedRewindInfo;
+        _originalFeed = originalFeed;
+        _feedPageUri = feedPageLink is null ? null : new Uri(feedPageLink);
+
+        FeedTitle = originalFeed.Title.Text;
+        OriginalFeedLink = originalFeed.Links
+            .FirstOrDefault(e => e.RelationshipType == "alternate")?.Uri;
+    }
+
     private SyndicationFeed? RewoundFeed { get; set; }
     private SyndicationFeed? ScheduledFeed { get; set; }
     private List<SyndicationItem> RewoundEntries { get; set; } = new();
 
-    public async Task<SyndicationFeed?> GetRewoundFeedAsync()
+    public SyndicationFeed? GetRewoundFeed()
     {
-        if (RewoundFeed is null) await LoadRewoundFeedAsync();
+        if (RewoundFeed is null) LoadRewoundFeed();
         return RewoundFeed;
     }
 
-    public async Task<SyndicationFeed?> GetScheduledFeedAsync()
+    public SyndicationFeed? GetScheduledFeed()
     {
-        if (ScheduledFeed is null) await LoadScheduledFeedAsync();
+        if (ScheduledFeed is null) LoadScheduledFeed();
         return ScheduledFeed;
     }
 
-    public async Task<SyndicationFeed?> GetOriginalFeedAsync()
-    {
-        if (OriginalFeed is null) await LoadOriginalFeedAsync();
-        return OriginalFeed;
-    }
+    public SyndicationFeed GetOriginalFeed() => _originalFeed;
 
-    private async Task LoadRewoundFeedAsync()
+    private void LoadRewoundFeed()
     {
         if (string.IsNullOrEmpty(_feedRewindInfo.FeedUrl)) return;
-        if (OriginalFeed is null && !await LoadOriginalFeedAsync()) return;
 
-        RewoundEntries = OriginalFeed!.Items.OrderBy(e => e.PublishDate).ToList();
+        RewoundEntries = _originalFeed.Items.OrderBy(e => e.PublishDate).ToList();
         var feedItemsCount = RewoundEntries.Count;
         var keyIndex = RewoundEntries.FindIndex(e => e.Id == _feedRewindInfo.KeyEntryId);
         var dateOfFirstEntry = _feedRewindInfo.DateOfKeyEntry.AddDays(-_feedRewindInfo.Interval * (keyIndex));
@@ -66,19 +69,19 @@ public class FeedRewindData
                 $"[⏪\u2009Originally published {pubDate:MMMM d, yyyy}.] {RewoundEntries[i].Summary.Text}");
         }
 
-        RewoundFeed = OriginalFeed.Clone(true);
+        RewoundFeed = _originalFeed.Clone(true);
         RewoundFeed.Title = new TextSyndicationContent($"⏪: {RewoundFeed.Title.Text}");
         if (_feedPageUri is not null)
             RewoundFeed.Links.Insert(0, SyndicationLink.CreateAlternateLink(_feedPageUri, "text/html"));
 
-        var descriptionType = OriginalFeed.Description.Type switch
+        var descriptionType = _originalFeed.Description.Type switch
         {
             "html" => TextSyndicationContentKind.Html,
             "xhtml" => TextSyndicationContentKind.XHtml,
             _ => TextSyndicationContentKind.Plaintext,
         };
 
-        var newDescription = OriginalFeed.Description.Type switch
+        var newDescription = _originalFeed.Description.Type switch
         {
             "html" or "xhtml" => string.Concat(
                 "<p>[This is a Podcast\u2009⏪\u2009Rewind feed. See link for details.] </p>",
@@ -93,39 +96,17 @@ public class FeedRewindData
             .OrderByDescending(e => e.PublishDate);
     }
 
-    private async Task LoadScheduledFeedAsync()
+    private void LoadScheduledFeed()
     {
         if (string.IsNullOrEmpty(_feedRewindInfo.FeedUrl)) return;
-        if (OriginalFeed is null && !await LoadOriginalFeedAsync()) return;
-        ScheduledFeed = OriginalFeed!.Clone(true);
+        ScheduledFeed = _originalFeed!.Clone(true);
         ScheduledFeed.Items = RewoundEntries.Where(e => e.PublishDate > DateTimeOffset.Now)
             .OrderBy(e => e.PublishDate);
     }
 
-    [MemberNotNullWhen(true, nameof(OriginalFeed))]
-    private async Task<bool> LoadOriginalFeedAsync()
-    {
-        OriginalFeed = await GetSyndicationFeedAsync(_feedRewindInfo.FeedUrl);
-        if (OriginalFeed is null) return false;
-        FeedTitle = OriginalFeed.Title.Text;
-        OriginalFeedLink = OriginalFeed.Links.FirstOrDefault(e => e.RelationshipType == "alternate")?.Uri;
-
-        return true;
-    }
-
-    public static async Task<SyndicationFeed?> GetSyndicationFeedAsync(string url)
-    {
-        if (!Uri.IsWellFormedUriString(url, UriKind.Absolute)) return null;
-        using var client = new HttpClient();
-        client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
-        await using var stream = await client.GetStreamAsync(url);
-        using var xmlReader = XmlReader.Create(stream);
-        return SyndicationFeed.Load(xmlReader);
-    }
-
     public async Task<byte[]> GetRewoundFeedAsBytesAsync()
     {
-        if (RewoundFeed is null) await LoadRewoundFeedAsync();
+        if (RewoundFeed is null) LoadRewoundFeed();
         if (RewoundFeed is null) return Array.Empty<byte>();
 
         var settings = new XmlWriterSettings

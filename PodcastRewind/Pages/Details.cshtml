@@ -24,8 +24,11 @@
     }
 </div>
 
+<p class="lead">
+    Your <span class="pr-logo">@Constants.Logo</span> feed is ready!
+</p>
 <p>
-    Your <span class="pr-logo">@Constants.Logo</span> feed is ready! Use the buttons below to subscribe in your
+    Use the buttons below to subscribe in your
     favorite podcast listening app. Most apps require you to paste a link to the RSS feed. Click the clipboard
     button below to quickly copy the link.
 </p>
@@ -37,9 +40,7 @@
     </a>
     <div class="btn-group me-1 mb-3" role="group">
         <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
-        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark"
-                onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl"
-                aria-label="Copy RSS link to clipboard" title="Copy RSS link to clipboard">
+        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl" aria-label="Copy RSS link to clipboard" title="Copy RSS link to clipboard">
             <img src="/img/clipboard.svg" alt="" aria-hidden="true" />
         </button>
     </div>

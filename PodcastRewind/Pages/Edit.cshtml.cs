@@ -10,7 +10,15 @@ namespace PodcastRewind.Pages;
 public class EditModel : PageModel
 {
     private readonly IFeedRewindRepository _repository;
-    public EditModel(IFeedRewindRepository repository) => _repository = repository;
+    private readonly ISyndicationFeedService _syndicationFeedService;
+
+    public EditModel(
+        IFeedRewindRepository repository,
+        ISyndicationFeedService syndicationFeedService)
+    {
+        _repository = repository;
+        _syndicationFeedService = syndicationFeedService;
+    }
 
     [BindProperty]
     public EditFeedRewindDto EditFeedRewind { get; set; } = null!;
@@ -25,16 +33,16 @@ public class EditModel : PageModel
         var feedRewindInfo = await _repository.GetAsync(id.Value);
         if (feedRewindInfo is null) return NotFound($"Feed ID '{id}' not found.");
 
-        var feedRewindData = new FeedRewindData(feedRewindInfo);
-        var rewoundFeed = await feedRewindData.GetRewoundFeedAsync();
+        var originalFeed = await _syndicationFeedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
+        if (originalFeed is null) return NotFound();
+
+        var feedRewindData = new FeedRewindData(feedRewindInfo, originalFeed);
+        var rewoundFeed = feedRewindData.GetRewoundFeed();
         if (rewoundFeed is null) return NotFound($"Feed ID '{id}' not found.");
 
         var latestRewindEpisode = rewoundFeed.Items.FirstOrDefault();
 
-        var feed = await feedRewindData.GetOriginalFeedAsync();
-        if (feed is null) return NotFound();
-
-        LoadData(feed);
+        LoadData(originalFeed);
 
         if (PodcastEpisodes.Count > 0)
         {
@@ -55,7 +63,7 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            var feed = await FeedRewindData.GetSyndicationFeedAsync(EditFeedRewind.FeedUrl);
+            var feed = await _syndicationFeedService.GetSyndicationFeedAsync(EditFeedRewind.FeedUrl);
             if (feed is null) return NotFound();
 
             LoadData(feed);
