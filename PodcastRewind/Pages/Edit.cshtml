@@ -67,7 +67,8 @@ else
 }
 
 @section Scripts{
-    <script>
-    document.getElementById("e-@Model.EditFeedRewind.NormalizedId").closest("li").scrollIntoView({block:"nearest"});
-    </script>
+<partial name="_ValidationScriptsPartial" />
+<script>
+    document.getElementById("e-@Model.EditFeedRewind.NormalizedId").closest("li").scrollIntoView({ block: "nearest" });
+</script>
 }
