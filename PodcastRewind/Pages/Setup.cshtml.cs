@@ -21,9 +21,9 @@ public class SetupModel : PageModel
 
     public async Task<IActionResult> OnGetAsync(string? feedUrl, int interval = 7)
     {
-        if (feedUrl is null) return NotFound();
+        if (feedUrl is null) return BadRequest("No feed URL entered.");
         if (!Uri.IsWellFormedUriString(feedUrl, UriKind.Absolute)) return BadRequest("The feed URL is invalid.");
-        
+
         var feed = await FeedRewindData.GetSyndicationFeedAsync(feedUrl);
         if (feed is null) return NotFound();
 
