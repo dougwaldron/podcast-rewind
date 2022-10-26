@@ -7,7 +7,7 @@ namespace PodcastRewind.Models;
 
 public class FeedRewindData
 {
-    public const string FeedMimeType = "application/atom+xml; charset=utf-8";
+    public const string FeedMimeType = "application/xml";
 
     private readonly FeedRewindInfo _feedRewindInfo;
     private readonly SyndicationFeed _originalFeed;
