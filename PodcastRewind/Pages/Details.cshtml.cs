@@ -45,8 +45,8 @@ public class DetailsModel : PageModel
 
         ScheduledFeed = FeedRewindData.GetScheduledFeed();
         RewindFeedId = id.Value;
-        RewindFeedUrl = Url.ActionLink("GetFeed", "Feed", new { id })!;
-        ApplePodcastSubscribeUrl = Url.ActionLink("GetFeed", "Feed", new { id }, "podcast")!;
+        RewindFeedUrl = Url.ActionLink("Get", "Feed", new { id })!;
+        ApplePodcastSubscribeUrl = Url.ActionLink("Get", "Feed", new { id }, "podcast")!;
         PodcastImageUrl = RewoundFeed.ImageUrl?.ToString() ?? "";
         OriginalPodcastLink = FeedRewindData.OriginalFeedLink?.AbsoluteUri;
 

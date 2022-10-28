@@ -7,7 +7,7 @@ namespace PodcastRewind.Models;
 
 public class FeedRewindData
 {
-    public const string FeedMimeType = "application/atom+xml; charset=utf-8";
+    public const string FeedMimeType = "text/xml; charset=utf-8";
 
     private readonly FeedRewindInfo _feedRewindInfo;
     private readonly SyndicationFeed _originalFeed;
@@ -121,7 +121,7 @@ public class FeedRewindData
         using var stream = new MemoryStream();
         await using var xmlWriter = XmlWriter.Create(stream, settings);
 
-        var formatter = new Atom10FeedFormatter(RewoundFeed);
+        var formatter = new Rss20FeedFormatter(RewoundFeed, true);
         formatter.WriteTo(xmlWriter);
         await xmlWriter.FlushAsync();
 
