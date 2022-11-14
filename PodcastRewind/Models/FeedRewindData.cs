@@ -66,7 +66,7 @@ public class FeedRewindData
 
             RewoundEntries[i].PublishDate = newPubDate;
             RewoundEntries[i].Summary = new TextSyndicationContent(
-                $"[⏪\u2009Originally published {pubDate:MMMM d, yyyy}.] {RewoundEntries[i].Summary.Text}");
+                $"[⏪\u2009Originally published {pubDate:MMMM d, yyyy}.] {RewoundEntries[i].Summary?.Text}");
         }
 
         RewoundFeed = _originalFeed.Clone(true);
