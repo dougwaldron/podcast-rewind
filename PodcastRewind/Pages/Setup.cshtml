@@ -7,10 +7,10 @@
 
 <h1>Create a <span class="pr-logo">@Constants.Logo</span> Feed for:</h1>
 
-<div class="d-flex flex-row justify-content-start align-items-center mb-3 bg-warning bg-opacity-10">
+<div class="d-flex flex-row justify-content-start align-items-center mb-3 bg-secondary bg-opacity-10 p-2 rounded">
     @if (!string.IsNullOrEmpty(Model.PodcastImageUrl))
     {
-        <img class="img-fluid rounded-start me-2" src="@Model.PodcastImageUrl" height="100" width="100" alt="" />
+        <img class="img-fluid rounded me-2" src="@Model.PodcastImageUrl" height="100" width="100" alt="" />
     }
     <h2>@Model.PodcastTitle</h2>
 </div>
@@ -21,7 +21,7 @@
 }
 else
 {
-    <p class="lead">Setting up a new <span class="pr-logo">@Constants.Logo</span> is easy!</p>
+    <p class="lead fw-normal">Setting up a new <span class="pr-logo">@Constants.Logo</span> is easy!</p>
 
     <form method="post">
         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
