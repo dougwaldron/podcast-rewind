@@ -8,13 +8,8 @@ html {
   }
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
-
 body {
-  margin-bottom: 60px;
+  margin-bottom: 30px;
 }
 
 .vh-50 {
