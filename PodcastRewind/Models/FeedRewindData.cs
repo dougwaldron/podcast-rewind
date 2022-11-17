@@ -99,7 +99,7 @@ public class FeedRewindData
     private void LoadScheduledFeed()
     {
         if (string.IsNullOrEmpty(_feedRewindInfo.FeedUrl)) return;
-        ScheduledFeed = _originalFeed!.Clone(true);
+        ScheduledFeed = _originalFeed.Clone(true);
         ScheduledFeed.Items = RewoundEntries.Where(e => e.PublishDate > DateTimeOffset.Now)
             .OrderBy(e => e.PublishDate);
     }
