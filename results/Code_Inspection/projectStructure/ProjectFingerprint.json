@@ -1,13 +1,13 @@
 {
   "languages": [
-    "SolutionFile",
-    "MSBuild",
-    "C#",
-    "Razor",
-    "CSS",
-    "SVG",
-    "JavaScript",
+    "Plain text",
+    "XML",
+    ".gitignore (GitIgnore)",
+    "YAML",
     "textmate",
-    "JSON"
+    "JSON",
+    "CSS",
+    "JavaScript",
+    "SVG"
   ]
 }
