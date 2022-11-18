@@ -1,0 +1,207 @@
+Project [Name:&, GUID:f300dc1b-e643-4ccb-80ee-a7f840b07500]
+  Child items:
+    ProjectFileImpl(Path : podcast-rewind.sln)[]
+  Referenced projects:
+  Referenced assemblies:
+
+Project [Name:Miscellaneous Files, GUID:7020124f-9ffc-4ac3-8f3d-aab8e0240759]
+  Sub items count: 0  Referenced projects:
+  Referenced assemblies:
+
+Project [Name:PodcastRewind, GUID:9b68e4f3-e952-4d89-9eff-47ac0fcfbe01]
+  CSharp Properties:
+    Active configuration for 'net7.0':
+        AllowUnsafeCode:False
+        BaseAddress:4194304
+        CheckForOverflowUnderflow:False
+        FileAlignment:512
+        DebugSymbols:True
+        IncrementalBuild:True
+        WarningsAsErrors:;NU1605
+        LanguageVersion:Default
+        NullableContextKind:Enable
+        ImplicitUsingsKind:Enable
+        DefineConstants:TRACE;DEBUG;NET;NET7_0;NETCOREAPP
+        EnableUnmanagedCodeDebugging:False
+        GenerateSerializationAssemblies :False
+        RelativeIntermediateDirectory:obj/Debug/net7.0/
+        Optimize:False
+        RegisterForCOMInterop:False
+        RemoveIntegerChecks:False
+        NoWarn:1701;1702
+        TreatWarningsAsErrors:False
+        WarningLevel:6
+        DocumentationFile:
+        OutputType:CONSOLE_EXE
+        StartupObject:
+        OutputAssemblyName:PodcastRewind
+        OutputAssemblyExtension:.dll
+        HasRunCommand:True
+      Name:Debug
+      RelativeOutputDirectory:bin/Debug/net7.0/
+      RelativeIntermediateDirectory:obj/Debug/net7.0/
+      Properties:_RazorComponentDeclarationOutputPath=obj/Debug/net7.0/RazorDeclaration/, AndroidUseManagedDesignTimeResourceGenerator=True, AspNetCoreHostingModel=inprocess, AspNetCoreModuleName=AspNetCoreModuleV2, AssemblyName=PodcastRewind, BaseIntermediateOutputPath=/data/project/PodcastRewind/obj/, CSharpCoreTargetsPath=/usr/share/dotnet/sdk/6.0.402/Roslyn/Microsoft.CSharp.Core.targets, ImplicitUsings=enable, MSBuildProjectExtensionsPath=/data/project/PodcastRewind/obj/, NoWarn=1701;1702, NuGetPackageRoot=/data/cache/nuget, Nullable=enable, PackageId=PodcastRewind, ProduceReferenceAssembly=true, RazorGenerateIntermediateOutputPath=obj/Debug/net7.0/Razor/, RazorGenerateOutputFileExtension=.g.cs, RazorLangVersion=6.0, RestoreProjectStyle=PackageReference, RoslynTargetsPath=/usr/share/dotnet/sdk/6.0.402/Roslyn, RunCommand=/data/project/PodcastRewind/bin/Debug/net7.0/PodcastRewind, RunWorkingDirectory=/data/project/PodcastRewind, TargetFramework=net7.0, TargetPath=/data/project/PodcastRewind/bin/Debug/net7.0/PodcastRewind.dll, UseAppHost=true, WarningsAsErrors=;NU1605
+      Capabilities:AspNetCore, CrossPlatformExecutable
+    Build Settings:
+        PreBuildEvent:
+        PostBuildEvent:
+        ApplicationType:
+        DefaultNamespace:PodcastRewind
+        ImportedNamespaces:
+        RunPostBuildEventType:ALWAYS
+        IsBuildable:True
+        IsDeployable:False
+        Configuration:Debug
+        PlatformTarget:AnyCPU
+    ProjectTypeGuid:349c5851-65df-11da-9384-00065b846f21
+    ProjectTypeGuid:fae04ec0-301f-11d3-bf4b-00c04f79efbc
+  Child items:
+    Folder [Name:Api]
+      Child items:
+        ProjectFileImpl(Path : FeedController.cs)[COMPILE ]
+    Folder [Name:Models]
+      Child items:
+        ProjectFileImpl(Path : Constants.cs)[COMPILE ]
+        Folder [Name:DTOs]
+          Child items:
+            ProjectFileImpl(Path : CreateFeedRewindDto.cs)[COMPILE ]
+            ProjectFileImpl(Path : EditFeedRewindDto.cs)[COMPILE ]
+            ProjectFileImpl(Path : ViewPodcastEpisodeDto.cs)[COMPILE ]
+        Folder [Name:Entities]
+          Child items:
+            ProjectFileImpl(Path : FeedRewindInfo.cs)[COMPILE ]
+        ProjectFileImpl(Path : FeedRewindData.cs)[COMPILE ]
+    Folder [Name:Pages]
+      Child items:
+        ProjectFileImpl(Path : Details.cshtml)[CONTENT ]
+        ProjectFileImpl(Path : Details.cshtml.cs)[COMPILE ]
+        ProjectFileImpl(Path : Edit.cshtml)[CONTENT ]
+        ProjectFileImpl(Path : Edit.cshtml.cs)[COMPILE ]
+        ProjectFileImpl(Path : Error.cshtml)[CONTENT ]
+        ProjectFileImpl(Path : Error.cshtml.cs)[COMPILE ]
+        ProjectFileImpl(Path : Index.cshtml)[CONTENT ]
+        ProjectFileImpl(Path : Index.cshtml.cs)[COMPILE ]
+        ProjectFileImpl(Path : Privacy.cshtml)[CONTENT ]
+        ProjectFileImpl(Path : Privacy.cshtml.cs)[COMPILE ]
+        ProjectFileImpl(Path : Search.cshtml)[CONTENT ]
+        ProjectFileImpl(Path : Search.cshtml.cs)[COMPILE ]
+        ProjectFileImpl(Path : Setup.cshtml)[CONTENT ]
+        ProjectFileImpl(Path : Setup.cshtml.cs)[COMPILE ]
+        Folder [Name:Shared]
+          Child items:
+            Folder [Name:DisplayTemplates]
+              Child items:
+                ProjectFileImpl(Path : DateTimeOffset.cshtml)[CONTENT ]
+            ProjectFileImpl(Path : _Layout.cshtml)[CONTENT ]
+            ProjectFileImpl(Path : _Layout.cshtml.css)[NONE ]
+            ProjectFileImpl(Path : _ValidationScriptsPartial.cshtml)[CONTENT ]
+        ProjectFileImpl(Path : _ViewImports.cshtml)[CONTENT ]
+        ProjectFileImpl(Path : _ViewStart.cshtml)[CONTENT ]
+    ProjectFileImpl(Path : PodcastRewind.csproj)[]
+    ProjectFileImpl(Path : Program.cs)[COMPILE ]
+    Folder [Name:Properties, IsAppDesigner:true]
+      Child items:
+        ProjectFileImpl(Path : launchSettings.json)[NONE ]
+    Folder [Name:Services]
+      Child items:
+        ProjectFileImpl(Path : FeedRewindRepository.cs)[COMPILE ]
+        ProjectFileImpl(Path : SyndicationFeedService.cs)[COMPILE ]
+    ProjectFileImpl(Path : appsettings.json)[CONTENT ]
+    ProjectFileImpl(Path : libman.json)[CONTENT ]
+    Folder [Name:wwwroot]
+      Child items:
+        ProjectFileImpl(Path : android-chrome-192x192.png)[CONTENT ]
+        ProjectFileImpl(Path : android-chrome-512x512.png)[CONTENT ]
+        ProjectFileImpl(Path : apple-touch-icon.png)[CONTENT ]
+        Folder [Name:css]
+          Child items:
+            ProjectFileImpl(Path : site.css)[CONTENT ]
+        ProjectFileImpl(Path : favicon-16x16.png)[CONTENT ]
+        ProjectFileImpl(Path : favicon-32x32.png)[CONTENT ]
+        ProjectFileImpl(Path : favicon.ico)[CONTENT ]
+        Folder [Name:img]
+          Child items:
+            ProjectFileImpl(Path : apple-podcasts.svg)[CONTENT ]
+            ProjectFileImpl(Path : clipboard.svg)[CONTENT ]
+            ProjectFileImpl(Path : github.svg)[CONTENT ]
+            ProjectFileImpl(Path : overcast-logo.svg)[CONTENT ]
+            ProjectFileImpl(Path : rss.svg)[CONTENT ]
+        Folder [Name:js]
+          Child items:
+            ProjectFileImpl(Path : site.js)[CONTENT ]
+        ProjectFileImpl(Path : site.webmanifest)[CONTENT ]
+  Target framework: net7.0
+    Referenced projects:
+    Referenced assemblies:
+      Microsoft.AspNetCore.Analyzers, Roslyn Analyzer
+      Microsoft.AspNetCore.Components.Analyzers, Roslyn Analyzer
+      Microsoft.AspNetCore.Mvc.Analyzers, Roslyn Analyzer
+      Microsoft.CodeAnalysis.CSharp.NetAnalyzers, Roslyn Analyzer
+      Microsoft.CodeAnalysis.NetAnalyzers, Roslyn Analyzer
+
+Project [Name:PodcastRewind.Tests, GUID:f6f08940-40dc-4216-9181-53004ce2483e]
+  CSharp Properties:
+    Active configuration for 'net7.0':
+        AllowUnsafeCode:False
+        BaseAddress:4194304
+        CheckForOverflowUnderflow:False
+        FileAlignment:512
+        DebugSymbols:True
+        IncrementalBuild:True
+        WarningsAsErrors:;NU1605
+        LanguageVersion:Default
+        NullableContextKind:Enable
+        ImplicitUsingsKind:Enable
+        DefineConstants:TRACE;DEBUG;NET;NET7_0;NETCOREAPP
+        EnableUnmanagedCodeDebugging:False
+        GenerateSerializationAssemblies :False
+        RelativeIntermediateDirectory:obj/Debug/net7.0/
+        Optimize:False
+        RegisterForCOMInterop:False
+        RemoveIntegerChecks:False
+        NoWarn:1701;1702
+        TreatWarningsAsErrors:False
+        WarningLevel:6
+        DocumentationFile:
+        OutputType:CONSOLE_EXE
+        StartupObject:
+        OutputAssemblyName:PodcastRewind.Tests
+        OutputAssemblyExtension:.dll
+        HasRunCommand:True
+      Name:Debug
+      RelativeOutputDirectory:bin/Debug/net7.0/
+      RelativeIntermediateDirectory:obj/Debug/net7.0/
+      Properties:AndroidUseManagedDesignTimeResourceGenerator=True, AssemblyName=PodcastRewind.Tests, BaseIntermediateOutputPath=obj/, CSharpCoreTargetsPath=/usr/share/dotnet/sdk/6.0.402/Roslyn/Microsoft.CSharp.Core.targets, GenerateProgramFile=true, ImplicitUsings=enable, MSBuildProjectExtensionsPath=/data/project/PodcastRewind.Tests/obj/, NoWarn=1701;1702, NuGetPackageRoot=/data/cache/nuget, Nullable=enable, PackageId=PodcastRewind.Tests, ProduceReferenceAssembly=true, RestoreProjectStyle=PackageReference, RoslynTargetsPath=/usr/share/dotnet/sdk/6.0.402/Roslyn, RunArguments=exec "/data/project/PodcastRewind.Tests/bin/Debug/net7.0/PodcastRewind.Tests.dll", RunCommand=dotnet, TargetFramework=net7.0, TargetPath=/data/project/PodcastRewind.Tests/bin/Debug/net7.0/PodcastRewind.Tests.dll, WarningsAsErrors=;NU1605
+      Capabilities:CrossPlatformExecutable
+    Build Settings:
+        PreBuildEvent:
+        PostBuildEvent:
+        ApplicationType:
+        DefaultNamespace:PodcastRewind.Tests
+        ImportedNamespaces:
+        RunPostBuildEventType:ALWAYS
+        IsBuildable:True
+        IsDeployable:False
+        Configuration:Debug
+        PlatformTarget:AnyCPU
+    ProjectTypeGuid:fae04ec0-301f-11d3-bf4b-00c04f79efbc
+  Child items:
+    ProjectFileImpl(Path : NUnit3.TestAdapter.dll (..\..\cache\nuget\nunit3testadapter\4.3.0\build\netcoreapp2.1\NUnit3.TestAdapter.dll))[Hidden NONE ]
+    ProjectFileImpl(Path : NUnit3.TestAdapter.pdb (..\..\cache\nuget\nunit3testadapter\4.3.0\build\netcoreapp2.1\NUnit3.TestAdapter.pdb))[Hidden NONE ]
+    ProjectFileImpl(Path : PodcastRewind.Tests.csproj)[]
+    ProjectFileImpl(Path : UnitTest1.cs)[COMPILE ]
+    ProjectFileImpl(Path : Usings.cs)[COMPILE ]
+    Folder [Name:netcoreapp3.1, Virtual:..\..\cache\nuget\microsoft.net.test.sdk\17.4.0\build\netcoreapp3.1, IsHidden:true]
+      Child items:
+        ProjectFileImpl(Path : Microsoft.NET.Test.Sdk.Program.cs)[Hidden COMPILE ]
+    ProjectFileImpl(Path : nunit.engine.api.dll (..\..\cache\nuget\nunit3testadapter\4.3.0\build\netcoreapp2.1\nunit.engine.api.dll))[Hidden NONE ]
+    ProjectFileImpl(Path : nunit.engine.core.dll (..\..\cache\nuget\nunit3testadapter\4.3.0\build\netcoreapp2.1\nunit.engine.core.dll))[Hidden NONE ]
+    ProjectFileImpl(Path : nunit.engine.dll (..\..\cache\nuget\nunit3testadapter\4.3.0\build\netcoreapp2.1\nunit.engine.dll))[Hidden NONE ]
+    ProjectFileImpl(Path : testcentric.engine.metadata.dll (..\..\cache\nuget\nunit3testadapter\4.3.0\build\netcoreapp2.1\testcentric.engine.metadata.dll))[Hidden NONE ]
+  Target framework: net7.0
+    Referenced projects:
+      PodcastRewind (PodcastRewind) [CopyLocal=True, AutoReferenced=False, AliasList=, EmbedInteropTypes=False, IsHidden=False, IsOutputAssembly=False, ReferenceOutputAssembly=True]
+    Referenced assemblies:
+      Microsoft.CodeAnalysis.CSharp.NetAnalyzers, Roslyn Analyzer
+      Microsoft.CodeAnalysis.NetAnalyzers, Roslyn Analyzer
+

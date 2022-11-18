@@ -1,13 +1,13 @@
 {
   "languages": [
-    "Plain text",
-    "XML",
-    ".gitignore (GitIgnore)",
-    "YAML",
-    "Markdown",
-    "JSON",
+    "SolutionFile",
+    "MSBuild",
+    "C#",
+    "Razor",
     "CSS",
+    "SVG",
     "JavaScript",
-    "SVG"
+    "textmate",
+    "JSON"
   ]
 }
