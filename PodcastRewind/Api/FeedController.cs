@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using PodcastRewind.Models;
 using PodcastRewind.Services;
+using System.Text;
 
 namespace PodcastRewind.Api;
 
@@ -32,6 +34,27 @@ public class FeedController : ControllerBase
 
         var feedPage = Url.PageLink("/Details", values: new { id })!;
         var feedRewindData = new FeedRewindData(feedRewindInfo, originalFeed, feedPage);
-        return File(await feedRewindData.GetRewoundFeedAsBytesAsync(), FeedRewindData.FeedMimeType);
+
+        var eTag = GenerateEtagFromLastModified(feedRewindData.GetLastModifiedDate());
+        var headers = HttpContext.Request.Headers;
+
+        if (headers.ContainsKey(HeaderNames.IfNoneMatch))
+        {
+            var incomingEtag = headers[HeaderNames.IfNoneMatch].ToString();
+            if (incomingEtag.Equals(eTag))
+                return new StatusCodeResult(StatusCodes.Status304NotModified);
+        }
+        else if (headers.ContainsKey(HeaderNames.IfModifiedSince) &&
+                 DateTimeOffset.TryParse(headers[HeaderNames.IfModifiedSince], out var ifModifiedSince) &&
+                 feedRewindData.GetLastModifiedDate() <= ifModifiedSince)
+        {
+            return new StatusCodeResult(StatusCodes.Status304NotModified);
+        }
+
+        return File(await feedRewindData.GetRewoundFeedAsBytesAsync(), FeedRewindData.FeedMimeType,
+            feedRewindData.GetLastModifiedDate(), new EntityTagHeaderValue(eTag));
     }
+
+    private static string GenerateEtagFromLastModified(DateTimeOffset lastModifiedDateTime) =>
+        "\"" + Convert.ToBase64String(Encoding.UTF8.GetBytes(lastModifiedDateTime.ToString())) + "\"";
 }

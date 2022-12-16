@@ -31,6 +31,7 @@ public class FeedRewindData
     }
 
     private SyndicationFeed? RewoundFeed { get; set; }
+    private DateTimeOffset? MostRecentRewoundFeedEntryDate { get; set; }
     private SyndicationFeed? ScheduledFeed { get; set; }
     private List<SyndicationItem> RewoundEntries { get; set; } = new();
 
@@ -38,6 +39,12 @@ public class FeedRewindData
     {
         if (RewoundFeed is null) LoadRewoundFeed();
         return RewoundFeed;
+    }
+
+    public DateTimeOffset GetLastModifiedDate()
+    {
+        if (MostRecentRewoundFeedEntryDate is null) LoadRewoundFeed();
+        return MostRecentRewoundFeedEntryDate ?? DateTimeOffset.Now;
     }
 
     public SyndicationFeed? GetScheduledFeed()
@@ -94,6 +101,7 @@ public class FeedRewindData
         RewoundFeed.Description = new TextSyndicationContent(newDescription, descriptionType);
         RewoundFeed.Items = RewoundEntries.Where(e => e.PublishDate <= DateTimeOffset.Now)
             .OrderByDescending(e => e.PublishDate);
+        MostRecentRewoundFeedEntryDate = RewoundFeed.Items.First().PublishDate;
     }
 
     private void LoadScheduledFeed()
