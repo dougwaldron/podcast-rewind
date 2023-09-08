@@ -1,4 +1,4 @@
-name: "CodeQL"
+name: CodeQL Scan
 
 on:
   push:
@@ -9,8 +9,12 @@ on:
     - cron: "23 17 * * 4"
 
 jobs:
-  analyze:
-    name: Analyze
+  codeql-analysis:
+    # ↓ Change this to "false" to disable the workflow without any alert messages.
+    if: ${{ true }}
+    # ↑ Change to "true" (or delete) to enable the workflow.
+
+    name: Analyze with CodeQL
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -32,15 +36,15 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v2
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: "7.0.x"
+          global-json-file: global.json
 
-      - name: Build with dotnet
-        run: dotnet build
+      # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
+      # If this step fails, then you should remove it and run the build manually (see below)
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
-        with:
-          category: "/language:${{matrix.language}}"
