@@ -39,7 +39,7 @@ public class SetupModel : PageModel
             CreateFeedRewind = new CreateFeedRewindDto
             {
                 FeedUrl = feedUrl,
-                KeyEntryId = PodcastEpisodes.First().Id,
+                KeyEntryId = PodcastEpisodes[0].Id,
                 Interval = interval,
             };
         }
