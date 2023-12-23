@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace PodcastRewind.Models.DTOs;
+namespace PodcastRewind.Models.Dto;
 
 public class CreateFeedRewindDto
 {

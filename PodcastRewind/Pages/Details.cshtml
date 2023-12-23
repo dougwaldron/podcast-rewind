@@ -10,7 +10,7 @@
 <div class="d-flex flex-row justify-content-start align-items-center mb-3 bg-secondary bg-opacity-10 p-2 rounded">
     @if (!string.IsNullOrEmpty(Model.PodcastImageUrl))
     {
-        <img class="img-fluid rounded me-2" src="@Model.PodcastImageUrl" height="100" width="100" alt="" />
+        <img class="img-fluid rounded me-2" src="@Model.PodcastImageUrl" height="100" width="100" alt=""/>
     }
     @if (Model.OriginalPodcastLink != null)
     {
@@ -34,14 +34,14 @@
 </p>
 
 <div>
-    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 mb-3" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true" /> Subscribe in Overcast</a>
+    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 mb-3" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true"/> Subscribe in Overcast</a>
     <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 mb-3" href="@Model.ApplePodcastSubscribeUrl">
-        <img src="/img/apple-podcasts.svg" alt="Listen on Apple Podcasts" />
+        <img src="/img/apple-podcasts.svg" alt="Listen on Apple Podcasts"/>
     </a>
     <div class="btn-group me-1 mb-3" role="group">
-        <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true" /> RSS Link</a>
+        <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true"/> RSS Link</a>
         <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl" aria-label="Copy RSS link to clipboard" title="Copy RSS link to clipboard">
-            <img src="/img/clipboard.svg" alt="" aria-hidden="true" />
+            <img src="/img/clipboard.svg" alt="" aria-hidden="true"/>
         </button>
     </div>
 </div>
@@ -67,7 +67,7 @@
                         @foreach (var episode in Model.RewoundFeed.Items)
                         {
                             <li class="list-group-item p-0">
-                                @Html.DisplayFor(m => episode.PublishDate): <strong>@episode.Title.Text</strong>
+                                @Html.DisplayFor(model => episode.PublishDate): <strong>@episode.Title.Text</strong>
                             </li>
                         }
                     </ul>
@@ -91,7 +91,7 @@
                         @foreach (var episode in Model.ScheduledFeed.Items)
                         {
                             <li class="list-group-item p-0">
-                                @Html.DisplayFor(m => episode.PublishDate): <strong>@episode.Title.Text</strong>
+                                @Html.DisplayFor(model => episode.PublishDate): <strong>@episode.Title.Text</strong>
                             </li>
                         }
                     </ul>

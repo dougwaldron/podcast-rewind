@@ -19,8 +19,7 @@ public class SearchModel : PageModel
     [Display(Name = "Feed URL:")]
     public string? FeedUrl { get; set; }
 
-    private readonly PodcastFinder _finder;
-    public SearchModel() => _finder = new PodcastFinder();
+    private readonly PodcastFinder _finder = new();
 
     public async Task<IActionResult> OnGetAsync(string? search)
     {
@@ -34,7 +33,7 @@ public class SearchModel : PageModel
         try
         {
             SearchResults = (await _finder.SearchPodcastsAsync(search, 30))
-                .Where(p => p.FeedUrl is not null).ToList();
+                .Where(podcast => podcast.FeedUrl is not null).ToList();
             ShowSearchResults = true;
         }
         catch (HttpRequestException)

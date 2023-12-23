@@ -6,8 +6,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseSentry();
 
 builder.Services.AddHttpClient("Polly")
-    .AddTransientHttpErrorPolicy(policyBuilder =>
-        policyBuilder.WaitAndRetryAsync(2, _ => TimeSpan.FromMilliseconds(600)));
+    .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(2, _ => TimeSpan.FromMilliseconds(600)));
+builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddTransient<IFeedRewindRepository, FeedRewindRepository>();
@@ -19,7 +19,6 @@ var app = builder.Build();
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

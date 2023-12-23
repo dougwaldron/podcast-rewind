@@ -1,27 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ServiceModel.Syndication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PodcastRewind.Models;
-using PodcastRewind.Models.DTOs;
+using PodcastRewind.Models.Dto;
 using PodcastRewind.Services;
-using System.ServiceModel.Syndication;
 
 namespace PodcastRewind.Pages;
 
-public class EditModel : PageModel
+public class EditModel(IFeedRewindRepository repository, ISyndicationFeedService syndicationFeedService)
+    : PageModel
 {
-    private readonly IFeedRewindRepository _repository;
-    private readonly ISyndicationFeedService _syndicationFeedService;
-
-    public EditModel(
-        IFeedRewindRepository repository,
-        ISyndicationFeedService syndicationFeedService)
-    {
-        _repository = repository;
-        _syndicationFeedService = syndicationFeedService;
-    }
-
-    [BindProperty]
-    public EditFeedRewindDto EditFeedRewind { get; set; } = null!;
+    [BindProperty] public EditFeedRewindDto EditFeedRewind { get; set; } = null!;
 
     public string PodcastTitle { get; private set; } = string.Empty;
     public string PodcastImageUrl { get; private set; } = string.Empty;
@@ -30,10 +19,10 @@ public class EditModel : PageModel
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id is null) return RedirectToPage("/Index");
-        var feedRewindInfo = await _repository.GetAsync(id.Value);
+        var feedRewindInfo = await repository.GetAsync(id.Value);
         if (feedRewindInfo is null) return NotFound($"Feed ID '{id}' not found.");
 
-        var originalFeed = await _syndicationFeedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
+        var originalFeed = await syndicationFeedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
         if (originalFeed is null) return NotFound();
 
         var feedRewindData = new FeedRewindData(feedRewindInfo, originalFeed);
@@ -63,22 +52,22 @@ public class EditModel : PageModel
     {
         if (!ModelState.IsValid)
         {
-            var feed = await _syndicationFeedService.GetSyndicationFeedAsync(EditFeedRewind.FeedUrl);
+            var feed = await syndicationFeedService.GetSyndicationFeedAsync(EditFeedRewind.FeedUrl);
             if (feed is null) return NotFound();
 
             LoadData(feed);
             return Page();
         }
 
-        await _repository.UpdateAsync(EditFeedRewind);
+        await repository.UpdateAsync(EditFeedRewind);
         return RedirectToPage("Details", new { EditFeedRewind.Id });
     }
 
     private void LoadData(SyndicationFeed feed)
     {
         PodcastTitle = feed.Title.Text;
-        PodcastEpisodes = feed.Items.Select(e => new ViewPodcastEpisodeDto(e))
-            .OrderBy(e => e.PublishDate).ToList();
+        PodcastEpisodes = feed.Items.Select(item => new ViewPodcastEpisodeDto(item))
+            .OrderBy(dto => dto.PublishDate).ToList();
         PodcastImageUrl = feed.ImageUrl?.ToString() ?? "";
     }
 }

@@ -27,7 +27,7 @@ public class FeedRewindData
 
         FeedTitle = originalFeed.Title.Text;
         OriginalFeedLink = originalFeed.Links
-            .FirstOrDefault(e => e.RelationshipType == "alternate")?.Uri;
+            .FirstOrDefault(link => link.RelationshipType == "alternate")?.Uri;
     }
 
     private SyndicationFeed? RewoundFeed { get; set; }
@@ -46,15 +46,13 @@ public class FeedRewindData
         return ScheduledFeed;
     }
 
-    public SyndicationFeed GetOriginalFeed() => _originalFeed;
-
     private void LoadRewoundFeed()
     {
         if (string.IsNullOrEmpty(_feedRewindInfo.FeedUrl)) return;
 
-        RewoundEntries = _originalFeed.Items.OrderBy(e => e.PublishDate).ToList();
+        RewoundEntries = _originalFeed.Items.OrderBy(item => item.PublishDate).ToList();
         var feedItemsCount = RewoundEntries.Count;
-        var keyIndex = RewoundEntries.FindIndex(e => e.Id == _feedRewindInfo.KeyEntryId);
+        var keyIndex = RewoundEntries.FindIndex(item => item.Id == _feedRewindInfo.KeyEntryId);
         var dateOfFirstEntry = _feedRewindInfo.DateOfKeyEntry.AddDays(-_feedRewindInfo.Interval * (keyIndex));
 
         for (var i = 0; i < feedItemsCount; i++)
@@ -92,16 +90,16 @@ public class FeedRewindData
         };
 
         RewoundFeed.Description = new TextSyndicationContent(newDescription, descriptionType);
-        RewoundFeed.Items = RewoundEntries.Where(e => e.PublishDate <= DateTimeOffset.Now)
-            .OrderByDescending(e => e.PublishDate);
+        RewoundFeed.Items = RewoundEntries.Where(item => item.PublishDate <= DateTimeOffset.Now)
+            .OrderByDescending(item => item.PublishDate);
     }
 
     private void LoadScheduledFeed()
     {
         if (string.IsNullOrEmpty(_feedRewindInfo.FeedUrl)) return;
         ScheduledFeed = _originalFeed.Clone(true);
-        ScheduledFeed.Items = RewoundEntries.Where(e => e.PublishDate > DateTimeOffset.Now)
-            .OrderBy(e => e.PublishDate);
+        ScheduledFeed.Items = RewoundEntries.Where(item => item.PublishDate > DateTimeOffset.Now)
+            .OrderBy(item => item.PublishDate);
     }
 
     public async Task<byte[]> GetRewoundFeedAsBytesAsync()

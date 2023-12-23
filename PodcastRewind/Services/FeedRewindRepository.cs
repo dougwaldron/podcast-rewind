@@ -1,6 +1,6 @@
-using PodcastRewind.Models.DTOs;
 using PodcastRewind.Models.Entities;
 using System.Text.Json;
+using PodcastRewind.Models.Dto;
 
 namespace PodcastRewind.Services;
 
@@ -32,7 +32,6 @@ public class FeedRewindRepository : IFeedRewindRepository
         Directory.CreateDirectory(DataFilesDirectory);
         await using var stream = File.Create(filePath);
         await JsonSerializer.SerializeAsync(stream, feedRewind);
-        await stream.DisposeAsync();
 
         return id;
     }
@@ -55,7 +54,6 @@ public class FeedRewindRepository : IFeedRewindRepository
         var filePath = Path.Combine(DataFilesDirectory, string.Concat(feedRewind.Id.ToString(), ".json"));
         await using var stream = File.Create(filePath);
         await JsonSerializer.SerializeAsync(stream, feedRewind);
-        await stream.DisposeAsync();
     }
 
     public async Task<FeedRewindInfo?> GetAsync(Guid id)
