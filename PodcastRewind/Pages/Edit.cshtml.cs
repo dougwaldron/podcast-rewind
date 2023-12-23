@@ -7,10 +7,10 @@ using PodcastRewind.Services;
 
 namespace PodcastRewind.Pages;
 
-public class EditModel(IFeedRewindRepository repository, ISyndicationFeedService syndicationFeedService)
+public class EditModel(IFeedRewindInfoRepository repository, ISyndicationFeedService feedService)
     : PageModel
 {
-    [BindProperty] public EditFeedRewindDto EditFeedRewind { get; set; } = null!;
+    [BindProperty] public EditFeedRewindInfoDto EditFeedRewindInfo { get; set; } = null!;
 
     public string PodcastTitle { get; private set; } = string.Empty;
     public string PodcastImageUrl { get; private set; } = string.Empty;
@@ -22,7 +22,7 @@ public class EditModel(IFeedRewindRepository repository, ISyndicationFeedService
         var feedRewindInfo = await repository.GetAsync(id.Value);
         if (feedRewindInfo is null) return NotFound($"Feed ID '{id}' not found.");
 
-        var originalFeed = await syndicationFeedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
+        var originalFeed = await feedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
         if (originalFeed is null) return NotFound();
 
         var feedRewindData = new FeedRewindData(feedRewindInfo, originalFeed);
@@ -35,7 +35,7 @@ public class EditModel(IFeedRewindRepository repository, ISyndicationFeedService
 
         if (PodcastEpisodes.Count > 0)
         {
-            EditFeedRewind = new EditFeedRewindDto
+            EditFeedRewindInfo = new EditFeedRewindInfoDto
             {
                 Id = feedRewindInfo.Id,
                 FeedUrl = feedRewindInfo.FeedUrl,
@@ -52,15 +52,15 @@ public class EditModel(IFeedRewindRepository repository, ISyndicationFeedService
     {
         if (!ModelState.IsValid)
         {
-            var feed = await syndicationFeedService.GetSyndicationFeedAsync(EditFeedRewind.FeedUrl);
+            var feed = await feedService.GetSyndicationFeedAsync(EditFeedRewindInfo.FeedUrl);
             if (feed is null) return NotFound();
 
             LoadData(feed);
             return Page();
         }
 
-        await repository.UpdateAsync(EditFeedRewind);
-        return RedirectToPage("Details", new { EditFeedRewind.Id });
+        await repository.UpdateAsync(EditFeedRewindInfo);
+        return RedirectToPage("Details", new { EditFeedRewindInfo.Id });
     }
 
     private void LoadData(SyndicationFeed feed)

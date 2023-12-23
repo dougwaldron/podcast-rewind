@@ -24,8 +24,8 @@ else
     <form method="post">
         <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
 
-        <div class="fw-semibold mb-2">@Html.DisplayNameFor(model => model.EditFeedRewind.KeyEntryId)</div>
-        <span asp-validation-for="EditFeedRewind.KeyEntryId" class="text-danger"></span>
+        <div class="fw-semibold mb-2">@Html.DisplayNameFor(model => model.EditFeedRewindInfo.KeyEntryId)</div>
+        <span asp-validation-for="EditFeedRewindInfo.KeyEntryId" class="text-danger"></span>
         <div class="vh-50 overflow-scroll-y mb-3 border border-3 border-secondary rounded">
             <div class="card">
                 <ul class="list-group list-group-flush">
@@ -34,7 +34,7 @@ else
                         <li class="list-group-item p-0">
                             <div class="form-check mb-0">
                                 <label class="form-check-label p-2 d-block" for="e-@episode.NormalizedId">
-                                    <input class="form-check-input" type="radio" asp-for="EditFeedRewind.KeyEntryId" value="@episode.Id" id="e-@episode.NormalizedId"/>
+                                    <input class="form-check-input" type="radio" asp-for="EditFeedRewindInfo.KeyEntryId" value="@episode.Id" id="e-@episode.NormalizedId"/>
                                     @Html.DisplayFor(model => episode.PublishDate): <strong>@episode.Title</strong>
                                 </label>
                             </div>
@@ -46,22 +46,22 @@ else
 
         <div class="row align-items-end">
             <div class="col-md mb-3">
-                <label class="form-label fw-semibold" asp-for="EditFeedRewind.DateOfKeyEntry"></label>
-                <input class="form-control form-control-lg" asp-for="EditFeedRewind.DateOfKeyEntry"/>
-                <span asp-validation-for="EditFeedRewind.DateOfKeyEntry" class="text-danger"></span>
+                <label class="form-label fw-semibold" asp-for="EditFeedRewindInfo.DateOfKeyEntry"></label>
+                <input class="form-control form-control-lg" asp-for="EditFeedRewindInfo.DateOfKeyEntry"/>
+                <span asp-validation-for="EditFeedRewindInfo.DateOfKeyEntry" class="text-danger"></span>
             </div>
             <div class="col-md mb-3">
-                <label class="form-label fw-semibold" asp-for="EditFeedRewind.Interval"></label>
-                <input class="form-control form-control-lg" asp-for="EditFeedRewind.Interval" inputmode="numeric"/>
-                <span asp-validation-for="EditFeedRewind.Interval" class="text-danger"></span>
+                <label class="form-label fw-semibold" asp-for="EditFeedRewindInfo.Interval"></label>
+                <input class="form-control form-control-lg" asp-for="EditFeedRewindInfo.Interval" inputmode="numeric"/>
+                <span asp-validation-for="EditFeedRewindInfo.Interval" class="text-danger"></span>
             </div>
         </div>
 
         <div>
-            <input type="hidden" asp-for="EditFeedRewind.FeedUrl"/>
-            <input type="hidden" asp-for="EditFeedRewind.Id"/>
+            <input type="hidden" asp-for="EditFeedRewindInfo.FeedUrl"/>
+            <input type="hidden" asp-for="EditFeedRewindInfo.Id"/>
             <button type="submit" class="btn btn-primary btn-lg me-2 mb-3">Save Changes</button>
-            <a asp-page="Details" asp-route-id="@Model.EditFeedRewind.Id" class="btn btn-outline-secondary btn-lg mb-3">Cancel</a>
+            <a asp-page="Details" asp-route-id="@Model.EditFeedRewindInfo.Id" class="btn btn-outline-secondary btn-lg mb-3">Cancel</a>
         </div>
     </form>
 }
@@ -69,6 +69,6 @@ else
 @section Scripts{
     <partial name="_ValidationScriptsPartial"/>
     <script>
-        document.getElementById("e-@Model.EditFeedRewind.NormalizedId").closest("li").scrollIntoView({ block: "nearest" });
+        document.getElementById("e-@Model.EditFeedRewindInfo.NormalizedId").closest("li").scrollIntoView({ block: "nearest" });
     </script>
 }

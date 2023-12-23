@@ -9,7 +9,7 @@ namespace PodcastRewind.Api;
 
 [ApiController]
 [Route("feed/{id:guid}")]
-public class FeedController(IFeedRewindRepository repository, ISyndicationFeedService syndicationFeedService)
+public class FeedController(IFeedRewindInfoRepository repository, ISyndicationFeedService feedService)
     : ControllerBase
 {
     [HttpGet, HttpHead, Produces(FeedRewindData.FeedMimeType)]
@@ -20,7 +20,7 @@ public class FeedController(IFeedRewindRepository repository, ISyndicationFeedSe
         var feedRewindInfo = await repository.GetAsync(id.Value);
         if (feedRewindInfo is null) return Problem($"Feed ID '{id}' not found.", statusCode: 404);
 
-        var originalFeed = await syndicationFeedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
+        var originalFeed = await feedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
         if (originalFeed is null) return NotFound();
 
         var feedPage = Url.PageLink("/Details", values: new { id })!;

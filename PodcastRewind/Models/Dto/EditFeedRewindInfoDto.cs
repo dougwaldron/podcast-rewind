@@ -1,6 +1,6 @@
 namespace PodcastRewind.Models.Dto;
 
-public class EditFeedRewindDto : CreateFeedRewindDto
+public class EditFeedRewindInfoDto : CreateFeedRewindInfoDto
 {
     public Guid Id { get; init; }
 

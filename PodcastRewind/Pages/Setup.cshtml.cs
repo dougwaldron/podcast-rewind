@@ -6,11 +6,11 @@ using PodcastRewind.Models.Dto;
 
 namespace PodcastRewind.Pages;
 
-public class SetupModel(IFeedRewindRepository repository, ISyndicationFeedService syndicationFeedService)
+public class SetupModel(IFeedRewindInfoRepository repository, ISyndicationFeedService feedService)
     : PageModel
 {
     [BindProperty]
-    public CreateFeedRewindDto CreateFeedRewind { get; set; } = null!;
+    public CreateFeedRewindInfoDto CreateFeedRewindInfo { get; set; } = null!;
 
     public string PodcastTitle { get; private set; } = string.Empty;
     public string PodcastImageUrl { get; private set; } = string.Empty;
@@ -21,14 +21,14 @@ public class SetupModel(IFeedRewindRepository repository, ISyndicationFeedServic
         if (feedUrl is null) return BadRequest("No feed URL entered.");
         if (!Uri.IsWellFormedUriString(feedUrl, UriKind.Absolute)) return BadRequest("The feed URL is invalid.");
 
-        var feed = await syndicationFeedService.GetSyndicationFeedAsync(feedUrl);
+        var feed = await feedService.GetSyndicationFeedAsync(feedUrl);
         if (feed is null) return NotFound();
 
         LoadData(feed);
 
         if (PodcastEpisodes.Count > 0)
         {
-            CreateFeedRewind = new CreateFeedRewindDto
+            CreateFeedRewindInfo = new CreateFeedRewindInfoDto
             {
                 FeedUrl = feedUrl,
                 KeyEntryId = PodcastEpisodes[0].Id,
@@ -43,14 +43,14 @@ public class SetupModel(IFeedRewindRepository repository, ISyndicationFeedServic
     {
         if (!ModelState.IsValid)
         {
-            var feed = await syndicationFeedService.GetSyndicationFeedAsync(CreateFeedRewind.FeedUrl);
+            var feed = await feedService.GetSyndicationFeedAsync(CreateFeedRewindInfo.FeedUrl);
             if (feed is null) return NotFound();
 
             LoadData(feed);
             return Page();
         }
 
-        var id = await repository.SaveAsync(CreateFeedRewind);
+        var id = await repository.SaveAsync(CreateFeedRewindInfo);
         return RedirectToPage("Details", new { id });
     }
 

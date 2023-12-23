@@ -1,21 +1,21 @@
-using PodcastRewind.Models.Entities;
 using System.Text.Json;
 using PodcastRewind.Models.Dto;
+using PodcastRewind.Models.Entities;
 
 namespace PodcastRewind.Services;
 
-public interface IFeedRewindRepository
+public interface IFeedRewindInfoRepository
 {
-    Task<Guid> SaveAsync(CreateFeedRewindDto create);
-    Task UpdateAsync(EditFeedRewindDto edit);
+    Task<Guid> SaveAsync(CreateFeedRewindInfoDto create);
+    Task UpdateAsync(EditFeedRewindInfoDto edit);
     Task<FeedRewindInfo?> GetAsync(Guid id);
 }
 
-public class FeedRewindRepository : IFeedRewindRepository
+public class FeedRewindInfoRepository : IFeedRewindInfoRepository
 {
     private static string DataFilesDirectory => "./_DataFiles";
 
-    public async Task<Guid> SaveAsync(CreateFeedRewindDto create)
+    public async Task<Guid> SaveAsync(CreateFeedRewindInfoDto create)
     {
         var id = Guid.NewGuid();
 
@@ -36,7 +36,7 @@ public class FeedRewindRepository : IFeedRewindRepository
         return id;
     }
 
-    public async Task UpdateAsync(EditFeedRewindDto edit)
+    public async Task UpdateAsync(EditFeedRewindInfoDto edit)
     {
         var original = await GetAsync(edit.Id);
         if (original is null) throw new ArgumentException($"Item {edit.Id} does not exist.", nameof(edit));
