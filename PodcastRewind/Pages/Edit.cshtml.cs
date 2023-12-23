@@ -1,13 +1,12 @@
 ﻿using System.ServiceModel.Syndication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PodcastRewind.Models;
 using PodcastRewind.Models.Dto;
 using PodcastRewind.Services;
 
 namespace PodcastRewind.Pages;
 
-public class EditModel(IFeedRewindInfoRepository repository, ISyndicationFeedService feedService)
+public class EditModel(IFeedRewindDataService feedService, IFeedRewindInfoRepository repository)
     : PageModel
 {
     [BindProperty] public EditFeedRewindInfoDto EditFeedRewindInfo { get; set; } = null!;
@@ -19,19 +18,17 @@ public class EditModel(IFeedRewindInfoRepository repository, ISyndicationFeedSer
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id is null) return RedirectToPage("/Index");
-        var feedRewindInfo = await repository.GetAsync(id.Value);
-        if (feedRewindInfo is null) return NotFound($"Feed ID '{id}' not found.");
 
-        var originalFeed = await feedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
-        if (originalFeed is null) return NotFound();
+        var feedRewindData = await feedService.GetFeedRewindDataAsync(id.Value);
+        if (feedRewindData == null) return NotFound($"Feed ID '{id}' not found.");
 
-        var feedRewindData = new FeedRewindData(feedRewindInfo, originalFeed);
         var rewoundFeed = feedRewindData.GetRewoundFeed();
         if (rewoundFeed is null) return NotFound($"Feed ID '{id}' not found.");
 
+        var feedRewindInfo = feedRewindData.GetFeedRewindInfo();
         var latestRewindEpisode = rewoundFeed.Items.FirstOrDefault();
 
-        LoadData(originalFeed);
+        LoadData(feedRewindData.GetOriginalFeed());
 
         if (PodcastEpisodes.Count > 0)
         {
@@ -52,10 +49,10 @@ public class EditModel(IFeedRewindInfoRepository repository, ISyndicationFeedSer
     {
         if (!ModelState.IsValid)
         {
-            var feed = await feedService.GetSyndicationFeedAsync(EditFeedRewindInfo.FeedUrl);
-            if (feed is null) return NotFound();
+            var feedRewindData = await feedService.GetFeedRewindDataAsync(EditFeedRewindInfo.Id);
+            if (feedRewindData is null) return NotFound();
 
-            LoadData(feed);
+            LoadData(feedRewindData.GetOriginalFeed());
             return Page();
         }
 

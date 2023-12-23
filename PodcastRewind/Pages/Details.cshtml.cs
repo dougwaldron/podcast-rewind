@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ServiceModel.Syndication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PodcastRewind.Models;
 using PodcastRewind.Services;
-using System.ServiceModel.Syndication;
 
 namespace PodcastRewind.Pages;
 
-public class DetailsModel(IFeedRewindInfoRepository repository, ISyndicationFeedService feedService)
+public class DetailsModel(IFeedRewindDataService feedService)
     : PageModel
 {
-    public FeedRewindData FeedRewindData { get; private set; } = null!;
+    public FeedRewindData? FeedRewindData { get; private set; }
     public string RewindFeedUrl { get; private set; } = string.Empty;
     public string? OriginalPodcastLink { get; private set; }
     public string ApplePodcastSubscribeUrl { get; private set; } = string.Empty;
@@ -21,16 +21,12 @@ public class DetailsModel(IFeedRewindInfoRepository repository, ISyndicationFeed
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id is null) return RedirectToPage("/Index");
-        var feedRewindInfo = await repository.GetAsync(id.Value);
-        if (feedRewindInfo is null) return NotFound($"Feed ID '{id}' not found.");
 
-        var originalFeed = await feedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
-        if (originalFeed is null) return NotFound();
+        var feedPageLink = Url.PageLink("Details", values: new { id })!;
+        FeedRewindData = await feedService.GetFeedRewindDataAsync(id.Value, feedPageLink);
+        if (FeedRewindData == null) return NotFound($"Feed ID '{id}' not found.");
 
-        var feedPage = Url.PageLink("Details", values: new { id })!;
-        FeedRewindData = new FeedRewindData(feedRewindInfo, originalFeed, feedPage);
         RewoundFeed = FeedRewindData.GetRewoundFeed();
-
         if (RewoundFeed is null) return NotFound($"Feed could not be loaded.");
 
         ScheduledFeed = FeedRewindData.GetScheduledFeed();

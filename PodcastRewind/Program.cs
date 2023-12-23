@@ -11,6 +11,7 @@ builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
 builder.Services.AddTransient<IFeedRewindInfoRepository, FeedRewindInfoRepository>();
+builder.Services.AddTransient<IFeedRewindDataService, FeedRewindDataService>();
 builder.Services.AddTransient<ISyndicationFeedService, SyndicationFeedService>();
 builder.Services.AddWebOptimizer();
 
