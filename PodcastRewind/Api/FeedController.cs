@@ -1,4 +1,7 @@
+using System.Globalization;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 using PodcastRewind.Models;
 using PodcastRewind.Services;
 
@@ -22,6 +25,27 @@ public class FeedController(IFeedRewindRepository repository, ISyndicationFeedSe
 
         var feedPage = Url.PageLink("/Details", values: new { id })!;
         var feedRewindData = new FeedRewindData(feedRewindInfo, originalFeed, feedPage);
-        return File(await feedRewindData.GetRewoundFeedAsBytesAsync(), FeedRewindData.FeedMimeType);
+
+        var eTag = GenerateEtagFromLastModified(feedRewindData.GetLastModifiedDate());
+        var headers = HttpContext.Request.Headers;
+
+        if (headers.TryGetValue(HeaderNames.IfNoneMatch, out var header))
+        {
+            var incomingEtag = header.ToString();
+            if (incomingEtag.Equals(eTag))
+                return new StatusCodeResult(StatusCodes.Status304NotModified);
+        }
+        else if (headers.TryGetValue(HeaderNames.IfModifiedSince, out var value) &&
+                 DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, out var ifModifiedSince) &&
+                 feedRewindData.GetLastModifiedDate() <= ifModifiedSince)
+        {
+            return new StatusCodeResult(StatusCodes.Status304NotModified);
+        }
+
+        return File(await feedRewindData.GetRewoundFeedAsBytesAsync(), FeedRewindData.FeedMimeType,
+            feedRewindData.GetLastModifiedDate(), new EntityTagHeaderValue(eTag));
     }
+
+    private static string GenerateEtagFromLastModified(DateTimeOffset lastModifiedDateTime) =>
+        $"\"{Convert.ToBase64String(Encoding.UTF8.GetBytes(lastModifiedDateTime.ToString()))}\"";
 }
