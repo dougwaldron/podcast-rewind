@@ -11,9 +11,9 @@ public interface IFeedRewindInfoRepository
     Task<FeedRewindInfo?> GetAsync(Guid id);
 }
 
-public class FeedRewindInfoRepository : IFeedRewindInfoRepository
+public class FeedRewindInfoRepository(IConfiguration config) : IFeedRewindInfoRepository
 {
-    private static string DataFilesDirectory => "./_DataFiles";
+    private string DataFilesDirectory => config.GetValue<string>("DataFilesDirectory")!;
 
     public async Task<Guid> SaveAsync(CreateFeedRewindInfoDto create)
     {

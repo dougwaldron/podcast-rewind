@@ -539,7 +539,7 @@ FodyWeavers.xsd
 ### Project-specific rules ###
 
 # Data files
-_DataFiles
+.DataFiles/
 
 # Environment settings files
 appsettings.*.json
