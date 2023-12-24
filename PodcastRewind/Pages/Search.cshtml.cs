@@ -12,7 +12,7 @@ public class SearchModel : PageModel
     [Display(Name = "Search for:")]
     public string? Search { get; set; }
 
-    public List<Podcast> SearchResults { get; private set; } = new();
+    public List<Podcast> SearchResults { get; private set; } = [];
     public bool ShowSearchResults { get; private set; }
 
     [BindProperty]

@@ -1,4 +1,5 @@
 using PodcastRewind.Services;
+using PodcastRewind.TestData;
 using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,10 +11,21 @@ builder.Services.AddHttpClient("Polly")
 builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
 builder.Services.AddRazorPages();
 builder.Services.AddControllers();
-builder.Services.AddTransient<IFeedRewindInfoRepository, FeedRewindInfoRepository>();
-builder.Services.AddTransient<IFeedRewindDataService, FeedRewindDataService>();
-builder.Services.AddTransient<ISyndicationFeedService, SyndicationFeedService>();
 builder.Services.AddWebOptimizer();
+
+// Configure feed services.
+if (builder.Configuration.GetValue<bool>("UseTestData"))
+{
+    builder.Services.AddTransient<IFeedRewindInfoRepository, TestFeedRewindInfoRepository>();
+    builder.Services.AddTransient<ISyndicationFeedService, TestSyndicationFeedService>();
+}
+else
+{
+    builder.Services.AddTransient<IFeedRewindInfoRepository, FeedRewindInfoRepository>();
+    builder.Services.AddTransient<ISyndicationFeedService, SyndicationFeedService>();
+}
+
+builder.Services.AddTransient<IFeedRewindDataService, FeedRewindDataService>();
 
 var app = builder.Build();
 
