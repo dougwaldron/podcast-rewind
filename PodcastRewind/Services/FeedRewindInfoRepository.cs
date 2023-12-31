@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Microsoft.Extensions.Caching.Memory;
 using PodcastRewind.Models.Dto;
 using PodcastRewind.Models.Entities;
 
@@ -11,9 +12,14 @@ public interface IFeedRewindInfoRepository
     Task<FeedRewindInfo?> GetAsync(Guid id);
 }
 
-public class FeedRewindInfoRepository(IConfiguration config) : IFeedRewindInfoRepository
+public class FeedRewindInfoRepository(IConfiguration config, IMemoryCache cache)
+    : IFeedRewindInfoRepository
 {
-    private string DataFilesDirectory => config.GetValue<string>("DataFilesDirectory")!;
+    private static readonly MemoryCacheEntryOptions CacheEntryOptions = new MemoryCacheEntryOptions()
+        .SetSlidingExpiration(TimeSpan.FromHours(3))
+        .SetAbsoluteExpiration(TimeSpan.FromDays(1));
+
+    private readonly string _dataFilesDirectory = config.GetValue<string>("DataFilesDirectory")!;
 
     public async Task<Guid> SaveAsync(CreateFeedRewindInfoDto create)
     {
@@ -28,11 +34,12 @@ public class FeedRewindInfoRepository(IConfiguration config) : IFeedRewindInfoRe
             Interval = create.Interval,
         };
 
-        var filePath = Path.Combine(DataFilesDirectory, string.Concat(id.ToString(), ".json"));
-        Directory.CreateDirectory(DataFilesDirectory);
+        var filePath = Path.Combine(_dataFilesDirectory, string.Concat(id.ToString(), ".json"));
+        Directory.CreateDirectory(_dataFilesDirectory);
         await using var stream = File.Create(filePath);
         await JsonSerializer.SerializeAsync(stream, feedRewind);
 
+        cache.Set(id, feedRewind, CacheEntryOptions);
         return id;
     }
 
@@ -51,23 +58,25 @@ public class FeedRewindInfoRepository(IConfiguration config) : IFeedRewindInfoRe
             CreatedOn = original.CreatedOn,
         };
 
-        var filePath = Path.Combine(DataFilesDirectory, string.Concat(feedRewind.Id.ToString(), ".json"));
+        var filePath = Path.Combine(_dataFilesDirectory, string.Concat(feedRewind.Id.ToString(), ".json"));
         await using var stream = File.Create(filePath);
         await JsonSerializer.SerializeAsync(stream, feedRewind);
+        cache.Set(edit.Id, feedRewind, CacheEntryOptions);
     }
 
-    public async Task<FeedRewindInfo?> GetAsync(Guid id)
-    {
-        var filePath = Path.Combine(DataFilesDirectory, string.Concat(id.ToString(), ".json"));
-
-        try
+    public Task<FeedRewindInfo?> GetAsync(Guid id) =>
+        cache.GetOrCreateAsync(id, async entry =>
         {
-            await using var stream = File.OpenRead(filePath);
-            return await JsonSerializer.DeserializeAsync<FeedRewindInfo>(stream);
-        }
-        catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
-        {
-            return null;
-        }
-    }
+            entry.SetOptions(CacheEntryOptions);
+            var filePath = Path.Combine(_dataFilesDirectory, string.Concat(id.ToString(), ".json"));
+            try
+            {
+                await using var stream = File.OpenRead(filePath);
+                return await JsonSerializer.DeserializeAsync<FeedRewindInfo>(stream);
+            }
+            catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
+            {
+                return null;
+            }
+        });
 }
