@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Net.Http.Headers;
 using PodcastRewind.Models;
@@ -9,7 +8,7 @@ namespace PodcastRewind.Api;
 
 [ApiController]
 [Route("feed/{id:guid}")]
-public class FeedController(IFeedRewindRepository repository, ISyndicationFeedService syndicationFeedService)
+public class FeedController(IFeedRewindDataService feedService)
     : ControllerBase
 {
     [HttpGet, HttpHead, Produces(FeedRewindData.FeedMimeType)]
@@ -17,35 +16,29 @@ public class FeedController(IFeedRewindRepository repository, ISyndicationFeedSe
     public async Task<IActionResult> GetAsync(Guid? id)
     {
         if (id is null) return Problem($"Feed ID missing.", statusCode: 404);
-        var feedRewindInfo = await repository.GetAsync(id.Value);
-        if (feedRewindInfo is null) return Problem($"Feed ID '{id}' not found.", statusCode: 404);
 
-        var originalFeed = await syndicationFeedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
-        if (originalFeed is null) return NotFound();
+        var feedPageLink = Url.PageLink("/Details", values: new { id })!;
+        var feedRewindData = await feedService.GetFeedRewindDataAsync(id.Value, feedPageLink);
+        if (feedRewindData == null) return NotFound($"Feed ID '{id}' not found.");
 
-        var feedPage = Url.PageLink("/Details", values: new { id })!;
-        var feedRewindData = new FeedRewindData(feedRewindInfo, originalFeed, feedPage);
+        var lastModifiedDateTime = feedRewindData.GetLastModifiedDate();
+        var eTag = feedRewindData.GetETag();
 
-        var eTag = GenerateEtagFromLastModified(feedRewindData.GetLastModifiedDate());
-        var headers = HttpContext.Request.Headers;
-
-        if (headers.TryGetValue(HeaderNames.IfNoneMatch, out var header))
-        {
-            var incomingEtag = header.ToString();
-            if (incomingEtag.Equals(eTag))
-                return new StatusCodeResult(StatusCodes.Status304NotModified);
-        }
-        else if (headers.TryGetValue(HeaderNames.IfModifiedSince, out var value) &&
-                 DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, out var ifModifiedSince) &&
-                 feedRewindData.GetLastModifiedDate() <= ifModifiedSince)
-        {
-            return new StatusCodeResult(StatusCodes.Status304NotModified);
-        }
-
-        return File(await feedRewindData.GetRewoundFeedAsBytesAsync(), FeedRewindData.FeedMimeType,
-            feedRewindData.GetLastModifiedDate(), new EntityTagHeaderValue(eTag));
+        return FeedUnmodified(HttpContext.Request.Headers, eTag, lastModifiedDateTime)
+            ? new StatusCodeResult(StatusCodes.Status304NotModified)
+            : File(await feedRewindData.GetRewoundFeedAsBytesAsync(), FeedRewindData.FeedMimeType,
+                lastModifiedDateTime, new EntityTagHeaderValue(eTag));
     }
 
-    private static string GenerateEtagFromLastModified(DateTimeOffset lastModifiedDateTime) =>
-        $"\"{Convert.ToBase64String(Encoding.UTF8.GetBytes(lastModifiedDateTime.ToString()))}\"";
+    private static bool FeedUnmodified(IHeaderDictionary headers, string eTag, DateTimeOffset lastModifiedDate) =>
+        EtagMatches(headers, eTag) || ModifiedSinceHeaderMatches(headers, lastModifiedDate);
+
+    private static bool EtagMatches(IHeaderDictionary headers, string eTag) =>
+        headers.TryGetValue(HeaderNames.IfNoneMatch, out var header) &&
+        header.ToString().Equals(eTag);
+
+    private static bool ModifiedSinceHeaderMatches(IHeaderDictionary headers, DateTimeOffset lastModifiedDate) =>
+        headers.TryGetValue(HeaderNames.IfModifiedSince, out var value) &&
+        DateTimeOffset.TryParse(value, CultureInfo.InvariantCulture, out var ifModifiedSince) &&
+        lastModifiedDate <= ifModifiedSince;
 }

@@ -1,16 +1,15 @@
 ﻿using System.ServiceModel.Syndication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PodcastRewind.Models;
 using PodcastRewind.Models.Dto;
 using PodcastRewind.Services;
 
 namespace PodcastRewind.Pages;
 
-public class EditModel(IFeedRewindRepository repository, ISyndicationFeedService syndicationFeedService)
+public class EditModel(IFeedRewindDataService feedService, IFeedRewindInfoRepository repository)
     : PageModel
 {
-    [BindProperty] public EditFeedRewindDto EditFeedRewind { get; set; } = null!;
+    [BindProperty] public EditFeedRewindInfoDto EditFeedRewindInfo { get; set; } = null!;
 
     public string PodcastTitle { get; private set; } = string.Empty;
     public string PodcastImageUrl { get; private set; } = string.Empty;
@@ -19,23 +18,21 @@ public class EditModel(IFeedRewindRepository repository, ISyndicationFeedService
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
         if (id is null) return RedirectToPage("/Index");
-        var feedRewindInfo = await repository.GetAsync(id.Value);
-        if (feedRewindInfo is null) return NotFound($"Feed ID '{id}' not found.");
 
-        var originalFeed = await syndicationFeedService.GetSyndicationFeedAsync(feedRewindInfo.FeedUrl);
-        if (originalFeed is null) return NotFound();
+        var feedRewindData = await feedService.GetFeedRewindDataAsync(id.Value);
+        if (feedRewindData == null) return NotFound($"Feed ID '{id}' not found.");
 
-        var feedRewindData = new FeedRewindData(feedRewindInfo, originalFeed);
         var rewoundFeed = feedRewindData.GetRewoundFeed();
         if (rewoundFeed is null) return NotFound($"Feed ID '{id}' not found.");
 
+        var feedRewindInfo = feedRewindData.GetFeedRewindInfo();
         var latestRewindEpisode = rewoundFeed.Items.FirstOrDefault();
 
-        LoadData(originalFeed);
+        LoadData(feedRewindData.GetOriginalFeed());
 
         if (PodcastEpisodes.Count > 0)
         {
-            EditFeedRewind = new EditFeedRewindDto
+            EditFeedRewindInfo = new EditFeedRewindInfoDto
             {
                 Id = feedRewindInfo.Id,
                 FeedUrl = feedRewindInfo.FeedUrl,
@@ -52,15 +49,15 @@ public class EditModel(IFeedRewindRepository repository, ISyndicationFeedService
     {
         if (!ModelState.IsValid)
         {
-            var feed = await syndicationFeedService.GetSyndicationFeedAsync(EditFeedRewind.FeedUrl);
-            if (feed is null) return NotFound();
+            var feedRewindData = await feedService.GetFeedRewindDataAsync(EditFeedRewindInfo.Id);
+            if (feedRewindData is null) return NotFound();
 
-            LoadData(feed);
+            LoadData(feedRewindData.GetOriginalFeed());
             return Page();
         }
 
-        await repository.UpdateAsync(EditFeedRewind);
-        return RedirectToPage("Details", new { EditFeedRewind.Id });
+        await repository.UpdateAsync(EditFeedRewindInfo);
+        return RedirectToPage("Details", new { EditFeedRewindInfo.Id });
     }
 
     private void LoadData(SyndicationFeed feed)

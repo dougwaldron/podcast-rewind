@@ -63,7 +63,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"dougwaldron_podcast-rewind" /o:"dougwaldron" /d:sonar.login="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml
+          .\.sonar\scanner\dotnet-sonarscanner begin /k:"dougwaldron_podcast-rewind" /o:"dougwaldron" /d:sonar.token="${{ secrets.SONAR_TOKEN }}" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.cs.opencover.reportsPaths=coverage.xml
           dotnet build
           coverlet .\PodcastRewind.Tests\bin\Debug\net8.0\DomainTests.dll --target "dotnet" --targetargs "test PodcastRewind.Tests --no-build"
           .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"

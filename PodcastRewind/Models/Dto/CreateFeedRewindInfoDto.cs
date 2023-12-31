@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PodcastRewind.Models.Dto;
 
-public class CreateFeedRewindDto
+public class CreateFeedRewindInfoDto
 {
     [Required]
     public string FeedUrl { get; init; } = string.Empty;
