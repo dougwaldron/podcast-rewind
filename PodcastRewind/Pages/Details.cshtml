@@ -2,7 +2,7 @@
 @using PodcastRewind.Models
 @model DetailsModel
 @{
-    ViewData["Title"] = $"{Constants.Logo} for {Model.FeedRewindData.FeedTitle}";
+    ViewData["Title"] = $"{Constants.Logo} for {Model.FeedRewindData!.FeedTitle}";
 }
 
 <h1><span class="pr-logo">@Constants.Logo</span> for:</h1>

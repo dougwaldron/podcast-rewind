@@ -4,8 +4,10 @@ using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Configure crash reporting (uses SENTRY_DSN environment variable).
 builder.WebHost.UseSentry();
 
+// Configure services.
 builder.Services.AddHttpClient("Polly")
     .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(2, _ => TimeSpan.FromMilliseconds(600)));
 builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
@@ -29,7 +31,12 @@ builder.Services.AddTransient<IFeedRewindDataService, FeedRewindDataService>();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
+// Configure error handling.
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
 {
     app.UseExceptionHandler("/Error");
     app.UseHsts();
