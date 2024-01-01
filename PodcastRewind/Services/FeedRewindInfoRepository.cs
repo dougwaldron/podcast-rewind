@@ -58,10 +58,10 @@ public class FeedRewindInfoRepository(IConfiguration config, IMemoryCache cache)
 
     public async Task<FeedRewindInfo?> GetAsync(Guid id)
     {
-        if (cache.TryGetValue(id, out FeedRewindInfo? entry)) return entry;
-        entry = await LoadFeedRewindInfoFromFileAsync(id);
-        if (entry != null) cache.Set(id, entry, CacheEntryOptions);
-        return entry;
+        if (cache.TryGetValue(id, out FeedRewindInfo? info)) return info;
+        info = await LoadFeedRewindInfoFromFileAsync(id);
+        if (info != null) cache.Set(id, info, CacheEntryOptions);
+        return info;
     }
 
     private async Task SaveFeedRewindInfoToFileAsync(Guid id, FeedRewindInfo feedRewind)
