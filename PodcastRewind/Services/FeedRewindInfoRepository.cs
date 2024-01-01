@@ -64,19 +64,25 @@ public class FeedRewindInfoRepository(IConfiguration config, IMemoryCache cache)
         cache.Set(edit.Id, feedRewind, CacheEntryOptions);
     }
 
-    public Task<FeedRewindInfo?> GetAsync(Guid id) =>
-        cache.GetOrCreateAsync(id, async entry =>
+    public async Task<FeedRewindInfo?> GetAsync(Guid id)
+    {
+        if (cache.TryGetValue(id, out FeedRewindInfo? entry)) return entry;
+        entry = await LoadFeedRewindInfoFromFileAsync(id);
+        if (entry != null) cache.Set(id, entry, CacheEntryOptions);
+        return entry;
+    }
+
+    private async Task<FeedRewindInfo?> LoadFeedRewindInfoFromFileAsync(Guid id)
+    {
+        var filePath = Path.Combine(_dataFilesDirectory, string.Concat(id.ToString(), ".json"));
+        try
         {
-            entry.SetOptions(CacheEntryOptions);
-            var filePath = Path.Combine(_dataFilesDirectory, string.Concat(id.ToString(), ".json"));
-            try
-            {
-                await using var stream = File.OpenRead(filePath);
-                return await JsonSerializer.DeserializeAsync<FeedRewindInfo>(stream);
-            }
-            catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
-            {
-                return null;
-            }
-        });
+            await using var stream = File.OpenRead(filePath);
+            return await JsonSerializer.DeserializeAsync<FeedRewindInfo>(stream);
+        }
+        catch (Exception e) when (e is FileNotFoundException or DirectoryNotFoundException)
+        {
+            return null;
+        }
+    }
 }
