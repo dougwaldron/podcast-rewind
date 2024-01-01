@@ -51,7 +51,9 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
         RewoundEntries = originalFeed.Items.OrderBy(item => item.PublishDate).ToList();
         var feedItemsCount = RewoundEntries.Count;
         var keyIndex = RewoundEntries.FindIndex(item => item.Id == feedRewindInfo.KeyEntryId);
-        var dateOfFirstEntry = feedRewindInfo.DateOfKeyEntry.AddDays(-feedRewindInfo.Interval * (keyIndex));
+        var dateOfFirstEntry = DateTime.SpecifyKind(
+            feedRewindInfo.DateOfKeyEntry.AddDays(-feedRewindInfo.Interval * keyIndex),
+            DateTimeKind.Unspecified);
 
         for (var i = 0; i < feedItemsCount; i++)
         {
@@ -88,16 +90,19 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
         };
 
         RewoundFeed.Description = new TextSyndicationContent(newDescription, descriptionType);
-        RewoundFeed.Items = RewoundEntries.Where(item => item.PublishDate <= DateTimeOffset.Now)
-            .OrderByDescending(item => item.PublishDate);
-        MostRecentRewoundFeedEntryDate = RewoundFeed.Items.First().PublishDate;
+        RewoundFeed.Items = RewoundEntries
+            .Where(item => item.PublishDate <= DateTimeOffset.Now)
+            .OrderByDescending(item => item.PublishDate).ToList();
+        if (RewoundFeed.Items.Any())
+            MostRecentRewoundFeedEntryDate = RewoundFeed.Items.First().PublishDate;
     }
 
     private void LoadScheduledFeed()
     {
         if (string.IsNullOrEmpty(feedRewindInfo.FeedUrl)) return;
         ScheduledFeed = originalFeed.Clone(true);
-        ScheduledFeed.Items = RewoundEntries.Where(item => item.PublishDate > DateTimeOffset.Now)
+        ScheduledFeed.Items = RewoundEntries
+            .Where(item => item.PublishDate > DateTimeOffset.Now)
             .OrderBy(item => item.PublishDate);
     }
 

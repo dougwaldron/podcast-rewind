@@ -540,6 +540,7 @@ FodyWeavers.xsd
 
 # Data files
 .DataFiles/
+_DataFiles/
 
 # Environment settings files
 appsettings.*.json
