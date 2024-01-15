@@ -13,13 +13,15 @@ public interface ISyndicationFeedService
 public class SyndicationFeedService(IHttpClientFactory httpClientFactory, IMemoryCache cache)
     : ISyndicationFeedService
 {
+    private static readonly MemoryCacheEntryOptions CacheEntryOptions = new MemoryCacheEntryOptions()
+        .SetAbsoluteExpiration(TimeSpan.FromHours(20));
+
     public async Task<SyndicationFeed?> GetSyndicationFeedAsync(string url)
     {
         if (!Uri.IsWellFormedUriString(url, UriKind.Absolute)) return null;
         if (cache.TryGetValue(url, out SyndicationFeed? feed)) return feed;
         feed = await GetRemoteSyndicationFeedAsync(url);
-        if (feed != null)
-            cache.Set(url, feed, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromHours(20)));
+        if (feed != null) cache.Set(url, feed, CacheEntryOptions);
         return feed;
     }
 
