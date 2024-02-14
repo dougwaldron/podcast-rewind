@@ -8,6 +8,10 @@ namespace PodcastRewind.Models;
 public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed originalFeed, string? feedPageLink = null)
 {
     public const string FeedMimeType = "text/xml; charset=utf-8";
+    private const string ContentNamespace = "http://purl.org/rss/1.0/modules/content/";
+    private const string ContentEncodedName = "encoded";
+    private const string ItunesNamespace = "http://www.itunes.com/dtds/podcast-1.0.dtd";
+    private const string ItunesSummaryName = "summary";
 
     private readonly Uri? _feedPageUri = feedPageLink is null ? null : new Uri(feedPageLink);
 
@@ -59,11 +63,17 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
         for (var i = 0; i < feedItemsCount; i++)
         {
             var feedItem = AllRescheduledFeedItems[i];
+
+            // Change pub date.
             var originalPubDate = feedItem.PublishDate;
+            var pubDateDescription = $"<p>[⏪\u2009Originally published {originalPubDate:MMMM d, yyyy}.]</p>";
             feedItem.PublishDate = new DateTimeOffset(dateOfFirstEntry, originalPubDate.Offset)
                 .Add(originalPubDate.TimeOfDay).AddDays(feedRewindInfo.Interval * i);
-            feedItem.Summary = new TextSyndicationContent(
-                $"[⏪\u2009Originally published {originalPubDate:MMMM d, yyyy}.] {feedItem.Summary.Text}");
+
+            // Update summary and content with original pub date.
+            feedItem.Summary = new TextSyndicationContent($"{pubDateDescription} {feedItem.Summary?.Text}");
+            UpdateExtensionContent(feedItem, pubDateDescription, ContentEncodedName, ContentNamespace);
+            UpdateExtensionContent(feedItem, pubDateDescription, ItunesSummaryName, ItunesNamespace);
         }
 
         RewoundFeed.Items = AllRescheduledFeedItems.Where(item => item.PublishDate <= DateTimeOffset.Now)
@@ -71,7 +81,7 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
         if (AllRescheduledFeedItems.Exists(item => item.PublishDate <= DateTimeOffset.Now))
             MostRecentRewoundFeedEntryDate = RewoundFeed.Items.First().PublishDate;
 
-        RewoundFeed.Title = new TextSyndicationContent($"⏪: {RewoundFeed.Title.Text}");
+        RewoundFeed.Title = new TextSyndicationContent($"⏪ {RewoundFeed.Title.Text}");
         if (_feedPageUri is not null)
             RewoundFeed.Links.Insert(0, SyndicationLink.CreateAlternateLink(_feedPageUri, "text/html"));
 
@@ -91,6 +101,16 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
         };
 
         RewoundFeed.Description = new TextSyndicationContent(newDescription, newDescriptionKind);
+    }
+
+    private static void UpdateExtensionContent(SyndicationItem feedItem, string pubDateDescription,
+        string outerName, string outerNamespace)
+    {
+        var content = feedItem.ElementExtensions.ReadElementExtensions<string>(outerName, outerNamespace)[0];
+        foreach (var extension in feedItem.ElementExtensions.Where(extension =>
+                     extension.OuterName == outerName && extension.OuterNamespace == outerNamespace).ToList())
+            feedItem.ElementExtensions.Remove(extension);
+        feedItem.ElementExtensions.Add(outerName, outerNamespace, $"{pubDateDescription} {content}");
     }
 
     private void LoadUpcomingFeed()
