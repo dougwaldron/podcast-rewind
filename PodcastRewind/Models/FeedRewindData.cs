@@ -104,6 +104,9 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
     private static void UpdateExtensionContent(SyndicationItem feedItem, string pubDateDescription,
         string outerName, string outerNamespace)
     {
+        if (!feedItem.ElementExtensions.Any(extension =>
+                extension.OuterName == outerName && extension.OuterNamespace == outerNamespace))
+            return;
         var content = feedItem.ElementExtensions.ReadElementExtensions<string>(outerName, outerNamespace)[0];
         foreach (var extension in feedItem.ElementExtensions.Where(extension =>
                      extension.OuterName == outerName && extension.OuterNamespace == outerNamespace).ToList())

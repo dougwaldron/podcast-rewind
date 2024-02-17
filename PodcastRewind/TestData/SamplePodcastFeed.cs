@@ -42,7 +42,6 @@ internal static partial class Data
         			<link>https://example.com/podcast/episode 3</link>
         			<itunes:subtitle>Subtitle of sample podcast episode three</itunes:subtitle>
         			<itunes:episodeType>full</itunes:episodeType>
-        			<description>This is the description for episode 3.</description>
         			<itunes:summary><![CDATA[<p>This is the iTunes summary for episode 3.</p>]]></itunes:summary>
         			<content:encoded><![CDATA[<p>This is the "content:encoded" element for episode 3.</p>]]></content:encoded>
         		</item>
@@ -59,7 +58,6 @@ internal static partial class Data
         			<itunes:subtitle>Subtitle of sample podcast episode two</itunes:subtitle>
         			<itunes:episodeType>full</itunes:episodeType>
         			<description>This is the description for episode 2.</description>
-        			<itunes:summary><![CDATA[<p>This is the iTunes summary for episode 2.</p>]]></itunes:summary>
         			<content:encoded><![CDATA[<p>This is the "content:encoded" element for episode 2.</p>]]></content:encoded>
         		</item>
         
@@ -76,7 +74,6 @@ internal static partial class Data
         			<itunes:episodeType>full</itunes:episodeType>
         			<description>This is the description for episode 1.</description>
         			<itunes:summary><![CDATA[<p>This is the iTunes summary for episode 1.</p>]]></itunes:summary>
-        			<content:encoded><![CDATA[<p>This is the "content:encoded" element for episode 1.</p>]]></content:encoded>
         		</item>
         
         	</channel>
