@@ -21,34 +21,32 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
     public string FeedTitle { get; } = originalFeed.Title.Text;
     private SyndicationFeed? RewoundFeed { get; set; }
     private DateTimeOffset? MostRecentRewoundFeedEntryDate { get; set; }
-    private SyndicationFeed? ScheduledFeed { get; set; }
     private List<SyndicationItem> AllRescheduledFeedItems { get; set; } = [];
 
     public SyndicationFeed? GetRewoundFeed()
     {
-        if (RewoundFeed is null) LoadRewoundFeed();
+        if (RewoundFeed is null) BuildRewoundFeed();
         return RewoundFeed;
     }
 
-    public SyndicationFeed? GetScheduledFeed()
-    {
-        if (ScheduledFeed is null) LoadUpcomingFeed();
-        return ScheduledFeed;
-    }
+    public IEnumerable<SyndicationItem> GetUpcomingItems() =>
+        AllRescheduledFeedItems
+            .Where(item => item.PublishDate > DateTimeOffset.Now)
+            .OrderBy(item => item.PublishDate);
 
     public SyndicationFeed GetOriginalFeed() => originalFeed;
     public FeedRewindInfo GetFeedRewindInfo() => feedRewindInfo;
 
     public DateTimeOffset GetLastModifiedDate()
     {
-        if (MostRecentRewoundFeedEntryDate is null) LoadRewoundFeed();
+        if (MostRecentRewoundFeedEntryDate is null) BuildRewoundFeed();
         return MostRecentRewoundFeedEntryDate ?? DateTimeOffset.Now;
     }
 
     public string GetETag() =>
         $"\"{Convert.ToBase64String(Encoding.UTF8.GetBytes(GetLastModifiedDate().ToString()))}\"";
 
-    private void LoadRewoundFeed()
+    private void BuildRewoundFeed()
     {
         if (string.IsNullOrEmpty(feedRewindInfo.FeedUrl)) return;
         RewoundFeed = originalFeed.Clone(true);
@@ -113,18 +111,9 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
         feedItem.ElementExtensions.Add(outerName, outerNamespace, $"{pubDateDescription} {content}");
     }
 
-    private void LoadUpcomingFeed()
-    {
-        if (string.IsNullOrEmpty(feedRewindInfo.FeedUrl) || RewoundFeed is null) return;
-        ScheduledFeed = RewoundFeed.Clone(false);
-        ScheduledFeed.Items = AllRescheduledFeedItems
-            .Where(item => item.PublishDate > DateTimeOffset.Now)
-            .OrderBy(item => item.PublishDate);
-    }
-
     public async Task<byte[]> GetRewoundFeedAsBytesAsync()
     {
-        if (RewoundFeed is null) LoadRewoundFeed();
+        if (RewoundFeed is null) BuildRewoundFeed();
         if (RewoundFeed is null) return Array.Empty<byte>();
 
         var settings = new XmlWriterSettings
