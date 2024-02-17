@@ -10,7 +10,7 @@ namespace PodcastRewind.TestData;
 public class TestSyndicationFeedService(IMemoryCache cache) : ISyndicationFeedService
 {
     private static readonly MemoryCacheEntryOptions CacheEntryOptions = new MemoryCacheEntryOptions()
-        .SetAbsoluteExpiration(TimeSpan.FromHours(20));
+        .SetAbsoluteExpiration(TimeSpan.FromMinutes(3));
 
     public async Task<SyndicationFeed?> GetSyndicationFeedAsync(string url)
     {

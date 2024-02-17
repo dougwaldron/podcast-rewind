@@ -27,7 +27,7 @@ public class SyndicationFeedService(IHttpClientFactory httpClientFactory, IMemor
 
     private async Task<SyndicationFeed?> GetRemoteSyndicationFeedAsync(string url)
     {
-        var client = httpClientFactory.CreateClient("Polly");
+        var client = httpClientFactory.CreateClient(nameof(Polly));
         client.DefaultRequestHeaders.Add("user-agent", "PodcastRewind/1.0");
         try
         {

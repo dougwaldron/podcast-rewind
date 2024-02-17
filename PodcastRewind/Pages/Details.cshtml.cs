@@ -15,7 +15,7 @@ public class DetailsModel(IFeedRewindDataService feedService)
     public string ApplePodcastSubscribeUrl { get; private set; } = string.Empty;
     public Guid RewindFeedId { get; private set; }
     public SyndicationFeed? RewoundFeed { get; private set; }
-    public SyndicationFeed? ScheduledFeed { get; private set; }
+    public List<SyndicationItem> ScheduledItems { get; } = [];
     public string PodcastImageUrl { get; private set; } = string.Empty;
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
@@ -29,7 +29,7 @@ public class DetailsModel(IFeedRewindDataService feedService)
         RewoundFeed = FeedRewindData.GetRewoundFeed();
         if (RewoundFeed is null) return NotFound($"Feed could not be loaded.");
 
-        ScheduledFeed = FeedRewindData.GetScheduledFeed();
+        ScheduledItems.AddRange(FeedRewindData.GetUpcomingItems());
         RewindFeedId = id.Value;
         RewindFeedUrl = Url.ActionLink("Get", "Feed", new { id })!;
         ApplePodcastSubscribeUrl = Url.ActionLink("Get", "Feed", new { id }, "podcast")!;

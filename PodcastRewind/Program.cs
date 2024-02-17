@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.WebHost.UseSentry();
 
 // Configure services.
-builder.Services.AddHttpClient("Polly")
+builder.Services.AddHttpClient(nameof(Polly))
     .AddTransientHttpErrorPolicy(policy => policy.WaitAndRetryAsync(2, _ => TimeSpan.FromMilliseconds(600)));
 builder.Services.AddHsts(options => options.MaxAge = TimeSpan.FromDays(365));
 builder.Services.AddRazorPages();
