@@ -50,11 +50,11 @@ public class TestFeedRewindInfoRepository(IMemoryCache cache) : IFeedRewindInfoR
         cache.Set(edit.Id, feedRewind, CacheEntryOptions);
     }
 
-    public async Task<FeedRewindInfo?> GetAsync(Guid id)
+    public Task<FeedRewindInfo?> GetAsync(Guid id)
     {
-        if (cache.TryGetValue(id, out FeedRewindInfo? feedRewind)) return feedRewind;
+        if (cache.TryGetValue(id, out FeedRewindInfo? feedRewind)) return Task.FromResult(feedRewind);
         feedRewind = Data.FeedRewindInfoData.SingleOrDefault(info => info.Id == id);
         if (feedRewind != null) cache.Set(id, feedRewind, CacheEntryOptions);
-        return feedRewind;
+        return Task.FromResult(feedRewind);
     }
 }
