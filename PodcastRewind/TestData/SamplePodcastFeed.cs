@@ -21,7 +21,7 @@ internal static partial class Data
         		<language>en</language>
         		<itunes:summary><![CDATA[<p>This is a summary of the test podcast feed for the Podcast Rewind app.</p>]]></itunes:summary>
         		<description><![CDATA[<p>This is the description of the test podcast feed for the Podcast Rewind app.</p>]]></description>
-        		<itunes:explicit>no</itunes:explicit>
+        		<itunes:explicit>false</itunes:explicit>
         		<itunes:type>serial</itunes:type>
         		<itunes:image href="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=640&amp;h=640&amp;auto=format&amp;fit=crop"/>
         		<image>
@@ -38,7 +38,7 @@ internal static partial class Data
         			<itunes:duration>00:01</itunes:duration>
         			<enclosure url="https://example.com/media.mp3" length="1" type="audio/mpeg"/>
         			<guid isPermaLink="false">20000000-0000-0000-0000-000000000003</guid>
-        			<itunes:explicit>no</itunes:explicit>
+        			<itunes:explicit>false</itunes:explicit>
         			<link>https://example.com/podcast/episode 3</link>
         			<itunes:subtitle>Subtitle of sample podcast episode three</itunes:subtitle>
         			<itunes:episodeType>full</itunes:episodeType>
@@ -53,7 +53,7 @@ internal static partial class Data
         			<itunes:duration>00:01</itunes:duration>
         			<enclosure url="https://example.com/media.mp3" length="1" type="audio/mpeg"/>
         			<guid isPermaLink="false">20000000-0000-0000-0000-000000000002</guid>
-        			<itunes:explicit>no</itunes:explicit>
+        			<itunes:explicit>false</itunes:explicit>
         			<link>https://example.com/podcast/episode 2</link>
         			<itunes:subtitle>Subtitle of sample podcast episode two</itunes:subtitle>
         			<itunes:episodeType>full</itunes:episodeType>
@@ -68,7 +68,7 @@ internal static partial class Data
         			<itunes:duration>00:01</itunes:duration>
         			<enclosure url="https://example.com/media.mp3" length="1" type="audio/mpeg"/>
         			<guid isPermaLink="false">20000000-0000-0000-0000-000000000001</guid>
-        			<itunes:explicit>no</itunes:explicit>
+        			<itunes:explicit>false</itunes:explicit>
         			<link>https://example.com/podcast/episode/1</link>
         			<itunes:subtitle>Subtitle of sample podcast episode one</itunes:subtitle>
         			<itunes:episodeType>full</itunes:episodeType>

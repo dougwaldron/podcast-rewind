@@ -8,9 +8,11 @@ namespace PodcastRewind.Models;
 public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed originalFeed, string? feedPageLink = null)
 {
     public const string FeedMimeType = "text/xml; charset=utf-8";
-    private const string ContentNamespace = "http://purl.org/rss/1.0/modules/content/";
+
+    private const string ContentNs = "http://purl.org/rss/1.0/modules/content/";
     private const string ContentEncodedName = "encoded";
-    private const string ItunesNamespace = "http://www.itunes.com/dtds/podcast-1.0.dtd";
+
+    private const string ItunesNs = "http://www.itunes.com/dtds/podcast-1.0.dtd";
     private const string ItunesSummaryName = "summary";
 
     private readonly Uri? _feedPageUri = feedPageLink is null ? null : new Uri(feedPageLink);
@@ -70,8 +72,8 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
 
             // Update summary and content with original pub date.
             feedItem.Summary = new TextSyndicationContent($"{pubDateDescription} {feedItem.Summary?.Text}");
-            UpdateExtensionContent(feedItem, pubDateDescription, ContentEncodedName, ContentNamespace);
-            UpdateExtensionContent(feedItem, pubDateDescription, ItunesSummaryName, ItunesNamespace);
+            UpdateExtensionContent(feedItem, pubDateDescription, ContentEncodedName, ContentNs);
+            UpdateExtensionContent(feedItem, pubDateDescription, ItunesSummaryName, ItunesNs);
         }
 
         RewoundFeed.Items = AllRescheduledFeedItems.Where(item => item.PublishDate <= DateTimeOffset.Now)
@@ -101,17 +103,18 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
         RewoundFeed.Description = new TextSyndicationContent(newDescription, newDescriptionKind);
     }
 
-    private static void UpdateExtensionContent(SyndicationItem feedItem, string pubDateDescription,
-        string outerName, string outerNamespace)
+    private static void UpdateExtensionContent(SyndicationItem feedItem, string pubDate, string name, string ns)
     {
-        if (!feedItem.ElementExtensions.Any(extension =>
-                extension.OuterName == outerName && extension.OuterNamespace == outerNamespace))
+        if (!feedItem.ElementExtensions.Any(extension => extension.OuterName == name && extension.OuterNamespace == ns))
             return;
-        var content = feedItem.ElementExtensions.ReadElementExtensions<string>(outerName, outerNamespace)[0];
-        foreach (var extension in feedItem.ElementExtensions.Where(extension =>
-                     extension.OuterName == outerName && extension.OuterNamespace == outerNamespace).ToList())
+
+        var content = feedItem.ElementExtensions.ReadElementExtensions<string>(name, ns)[0];
+
+        foreach (var extension in feedItem.ElementExtensions
+                     .Where(extension => extension.OuterName == name && extension.OuterNamespace == ns).ToList())
             feedItem.ElementExtensions.Remove(extension);
-        feedItem.ElementExtensions.Add(outerName, outerNamespace, $"{pubDateDescription} {content}");
+
+        feedItem.ElementExtensions.Add(name, ns, $"{pubDate} {content}");
     }
 
     public async Task<byte[]> GetRewoundFeedAsBytesAsync()
