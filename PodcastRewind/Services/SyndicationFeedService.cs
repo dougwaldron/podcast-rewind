@@ -1,7 +1,6 @@
 using System.ServiceModel.Syndication;
 using System.Xml;
 using Microsoft.Extensions.Caching.Memory;
-using Sentry;
 
 namespace PodcastRewind.Services;
 
