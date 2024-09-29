@@ -66,3 +66,13 @@ body {
   top: 0;
   transition: all 0.2s ease-in-out;
 }
+
+/* Bootstrap Icons
+-------------------------------------------------- */
+.bi {
+  width: 1em;
+  height: 1em;
+  fill: currentColor;
+  vertical-align: -.125em;
+  overflow: visible !important;
+}
