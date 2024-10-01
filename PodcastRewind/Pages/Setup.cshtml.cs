@@ -32,7 +32,7 @@ public class SetupModel(IFeedRewindInfoRepository repository, ISyndicationFeedSe
             PodcastEpisodes = feed.Items.Select(item => new ViewPodcastEpisodeDto(item))
                 .OrderBy(dto => dto.PublishDate).ToList();
         }
-        catch (XmlException e)
+        catch (XmlException)
         {
             XmlParsingError = true;
             return Page();
