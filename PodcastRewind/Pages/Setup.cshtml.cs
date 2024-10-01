@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using PodcastRewind.Services;
-using System.ServiceModel.Syndication;
 using PodcastRewind.Models.Dto;
+using PodcastRewind.Services;
+using System.Xml;
 
 namespace PodcastRewind.Pages;
 
@@ -15,6 +15,7 @@ public class SetupModel(IFeedRewindInfoRepository repository, ISyndicationFeedSe
     public string PodcastTitle { get; private set; } = string.Empty;
     public string PodcastImageUrl { get; private set; } = string.Empty;
     public List<ViewPodcastEpisodeDto> PodcastEpisodes { get; private set; } = [];
+    public bool XmlParsingError { get; private set; }
 
     public async Task<IActionResult> OnGetAsync(string? feedUrl, int interval = 7)
     {
@@ -24,7 +25,18 @@ public class SetupModel(IFeedRewindInfoRepository repository, ISyndicationFeedSe
         var feed = await feedService.GetSyndicationFeedAsync(feedUrl);
         if (feed is null) return NotFound();
 
-        LoadData(feed);
+        PodcastTitle = feed.Title.Text;
+        PodcastImageUrl = feed.ImageUrl?.ToString() ?? "";
+        try
+        {
+            PodcastEpisodes = feed.Items.Select(item => new ViewPodcastEpisodeDto(item))
+                .OrderBy(dto => dto.PublishDate).ToList();
+        }
+        catch (XmlException)
+        {
+            XmlParsingError = true;
+            return Page();
+        }
 
         if (PodcastEpisodes.Count > 0)
         {
@@ -46,19 +58,14 @@ public class SetupModel(IFeedRewindInfoRepository repository, ISyndicationFeedSe
             var feed = await feedService.GetSyndicationFeedAsync(CreateFeedRewindInfo.FeedUrl);
             if (feed is null) return NotFound();
 
-            LoadData(feed);
+            PodcastTitle = feed.Title.Text;
+            PodcastEpisodes = feed.Items.Select(item => new ViewPodcastEpisodeDto(item))
+                .OrderBy(dto => dto.PublishDate).ToList();
+            PodcastImageUrl = feed.ImageUrl?.ToString() ?? "";
             return Page();
         }
 
         var id = await repository.SaveAsync(CreateFeedRewindInfo);
         return RedirectToPage("Details", new { id });
-    }
-
-    private void LoadData(SyndicationFeed feed)
-    {
-        PodcastTitle = feed.Title.Text;
-        PodcastEpisodes = feed.Items.Select(item => new ViewPodcastEpisodeDto(item))
-            .OrderBy(dto => dto.PublishDate).ToList();
-        PodcastImageUrl = feed.ImageUrl?.ToString() ?? "";
     }
 }

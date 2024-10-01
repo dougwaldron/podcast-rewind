@@ -10,12 +10,25 @@
 <div class="d-flex flex-row justify-content-start align-items-center mb-3 bg-secondary bg-opacity-10 p-2 rounded">
     @if (!string.IsNullOrEmpty(Model.PodcastImageUrl))
     {
-        <img class="img-fluid rounded me-2" src="@Model.PodcastImageUrl" height="100" width="100" alt="" />
+        <img class="img-fluid rounded" src="@Model.PodcastImageUrl" height="100" width="100" alt="" />
     }
-    <h2>@Model.PodcastTitle</h2>
+    <h2 class="m-2">@Model.PodcastTitle</h2>
 </div>
 
-@if (Model.PodcastEpisodes.Count == 0)
+@if (Model.XmlParsingError)
+{
+    <div class="alert alert-warning" role="alert">
+        Whoops! There's a
+        <a class="alert-link" href="https://github.com/dougwaldron/podcast-rewind/issues/75">
+            bug in Microsoft's feed parsing library
+        </a> 
+        that prevents some feeds from working, including this one. Unfortunately, there's nothing I can do about it 
+        until Microsoft fixes it. I've already sent them
+        <a class="alert-link" href="https://github.com/dotnet/runtime/pull/99194">code that fixes the issue</a>.
+        If you want, you can go there and express your support.
+    </div>
+}
+else if (Model.PodcastEpisodes.Count == 0)
 {
     <p>That podcast feed doesn't seem to have any episodes!</p>
 }
@@ -77,5 +90,5 @@ else
 
 @section Scripts
 {
-<partial name="_ValidationScriptsPartial" />
+    <partial name="_ValidationScriptsPartial" />
 }
