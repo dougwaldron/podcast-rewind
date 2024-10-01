@@ -8,10 +8,6 @@ html {
   }
 }
 
-body {
-  margin-bottom: 30px;
-}
-
 .vh-50 {
   height: 50vh !important;
 }

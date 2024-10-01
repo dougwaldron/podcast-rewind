@@ -3,22 +3,20 @@
     var iconsFile = Url.Content("~/img/app-icons.svg");
 }
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en" class="h-100">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" />
-
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
 </head>
 
-<body>
+<body class="d-flex flex-column h-100">
 <a class="skip-nav" href="#main-content">Skip to main content</a>
 <header>
     <nav class="navbar navbar-expand border-bottom bg-primary bg-opacity-10 shadow-sm mb-3">
@@ -79,14 +77,15 @@
         </div>
     </nav>
 </header>
-<div class="container">
-    <main role="main" id="main-content" class="pb-3">
-        @RenderBody()
-    </main>
-</div>
 
-<footer class="border-top footer text-muted">
-    <div class="container mt-3">
+<main role="main" id="main-content" class="pb-3 flex-grow-1">
+    <div class="container">
+        @RenderBody()
+    </div>
+</main>
+
+<footer class="border-top footer text-body-tertiary bg-body-tertiary">
+    <div class="container py-3">
         Made by <a href="https://github.com/dougwaldron">Doug Waldron</a>
         &#x2000;&middot;&#x2000;
         <a asp-page="/Privacy">Privacy Policy</a>
@@ -105,5 +104,4 @@
 
 @await RenderSectionAsync("Scripts", required: false)
 </body>
-
 </html>
