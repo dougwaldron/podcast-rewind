@@ -21,9 +21,10 @@ public class SetupModel(IFeedRewindInfoRepository repository, ISyndicationFeedSe
     {
         if (feedUrl is null) return BadRequest("No feed URL entered.");
         if (!Uri.IsWellFormedUriString(feedUrl, UriKind.Absolute)) return BadRequest("The feed URL is invalid.");
+        if (feedUrl.EndsWith('\'') || feedUrl.EndsWith("'123")) return BadRequest();
 
         var feed = await feedService.GetSyndicationFeedAsync(feedUrl);
-        if (feed is null) return NotFound();
+        if (feed is null) return NotFound("The feed URL could not be found.");
 
         PodcastTitle = feed.Title.Text;
         PodcastImageUrl = feed.ImageUrl?.ToString() ?? "";
@@ -32,8 +33,9 @@ public class SetupModel(IFeedRewindInfoRepository repository, ISyndicationFeedSe
             PodcastEpisodes = feed.Items.Select(item => new ViewPodcastEpisodeDto(item))
                 .OrderBy(dto => dto.PublishDate).ToList();
         }
-        catch (XmlException)
+        catch (XmlException e)
         {
+            SentrySdk.CaptureException(e);
             XmlParsingError = true;
             return Page();
         }
@@ -56,7 +58,7 @@ public class SetupModel(IFeedRewindInfoRepository repository, ISyndicationFeedSe
         if (!ModelState.IsValid)
         {
             var feed = await feedService.GetSyndicationFeedAsync(CreateFeedRewindInfo.FeedUrl);
-            if (feed is null) return NotFound();
+            if (feed is null) return BadRequest();
 
             PodcastTitle = feed.Title.Text;
             PodcastEpisodes = feed.Items.Select(item => new ViewPodcastEpisodeDto(item))
