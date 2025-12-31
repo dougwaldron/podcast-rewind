@@ -34,13 +34,13 @@
 </p>
 
 <div>
-    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 mb-3" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true"/> Subscribe in Overcast</a>
-    <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark me-1 mb-3" href="@Model.ApplePodcastSubscribeUrl">
+    <a class="btn btn-lg btn-outline-dark btn-icon me-1 mb-3" href="overcast://x-callback-url/add?url=@Model.RewindFeedUrl"><img src="/img/overcast-logo.svg" alt="" aria-hidden="true"/> Subscribe in Overcast</a>
+    <a class="btn btn-lg btn-outline-dark btn-icon me-1 mb-3" href="@Model.ApplePodcastSubscribeUrl">
         <img src="/img/apple-podcasts.svg" alt="Listen on Apple Podcasts"/>
     </a>
     <div class="btn-group me-1 mb-3" role="group">
-        <a class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true"/> RSS Link</a>
-        <button class="btn btn-lg btn-outline-light btn-icon text-dark border-dark" onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl" aria-label="Copy RSS link to clipboard" title="Copy RSS link to clipboard">
+        <a class="btn btn-lg btn-outline-dark btn-icon" href="@Model.RewindFeedUrl"><img src="/img/rss.svg" alt="" aria-hidden="true"/> RSS Link</a>
+        <button class="btn btn-lg btn-outline-dark btn-icon" onclick="copyToClipboard(this)" data-link="@Model.RewindFeedUrl" aria-label="Copy RSS link to clipboard" title="Copy RSS link to clipboard">
             <img src="/img/clipboard.svg" alt="" aria-hidden="true"/>
         </button>
     </div>
