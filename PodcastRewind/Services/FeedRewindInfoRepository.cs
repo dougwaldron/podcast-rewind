@@ -70,7 +70,7 @@ public class FeedRewindInfoRepository(IConfiguration config, IMemoryCache cache)
         var feedRewind = await GetAsync(id);
         if (feedRewind == null) return;
 
-        var updatedFeedRewind = feedRewind with { LastAccessedOn = DateTime.Now };
+        var updatedFeedRewind = feedRewind with { LastAccessedOn = DateTime.UtcNow };
         await SaveFeedRewindInfoToFileAsync(id, updatedFeedRewind);
     }
 
