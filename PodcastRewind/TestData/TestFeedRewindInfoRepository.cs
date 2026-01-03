@@ -57,4 +57,15 @@ public class TestFeedRewindInfoRepository(IMemoryCache cache) : IFeedRewindInfoR
         if (feedRewind != null) cache.Set(id, feedRewind, CacheEntryOptions);
         return Task.FromResult(feedRewind);
     }
+
+    public async Task UpdateLastAccessedAsync(Guid id)
+    {
+        var feedRewind = await GetAsync(id);
+        if (feedRewind == null) return;
+
+        var updatedFeedRewind = feedRewind with { LastAccessedOn = DateTime.Now };
+        Data.FeedRewindInfoData.Remove(feedRewind);
+        Data.FeedRewindInfoData.Add(updatedFeedRewind);
+        cache.Set(id, updatedFeedRewind, CacheEntryOptions);
+    }
 }

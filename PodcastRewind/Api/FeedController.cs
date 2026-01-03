@@ -8,7 +8,7 @@ namespace PodcastRewind.Api;
 
 [ApiController]
 [Route("feed/{id:guid}")]
-public class FeedController(IFeedRewindDataService feedService)
+public class FeedController(IFeedRewindDataService feedService, IFeedRewindInfoRepository repository, ILogger<FeedController> logger)
     : ControllerBase
 {
     [HttpGet, HttpHead, Produces(FeedRewindData.FeedMimeType)]
@@ -23,6 +23,12 @@ public class FeedController(IFeedRewindDataService feedService)
 
         var lastModifiedDateTime = feedRewindData.GetLastModifiedDate();
         var eTag = feedRewindData.GetETag();
+
+        // Log feed refresh/access
+        logger.LogInformation("Feed accessed: FeedId={FeedId}, FeedTitle={FeedTitle}", id.Value, feedRewindData.FeedTitle);
+        
+        // Update last accessed timestamp
+        await repository.UpdateLastAccessedAsync(id.Value);
 
         return FeedUnmodified(HttpContext.Request.Headers, eTag, lastModifiedDateTime)
             ? new StatusCodeResult(StatusCodes.Status304NotModified)
