@@ -63,6 +63,13 @@ public class TestFeedRewindInfoRepository(IMemoryCache cache) : IFeedRewindInfoR
         var feedRewind = await GetAsync(id);
         if (feedRewind == null) return;
 
+        // Only update if more than 5 minutes have passed since last access
+        if (feedRewind.LastAccessedOn.HasValue && 
+            (DateTime.UtcNow - feedRewind.LastAccessedOn.Value).TotalMinutes < 5)
+        {
+            return;
+        }
+
         var updatedFeedRewind = feedRewind with { LastAccessedOn = DateTime.UtcNow };
         Data.FeedRewindInfoData.Remove(feedRewind);
         Data.FeedRewindInfoData.Add(updatedFeedRewind);
