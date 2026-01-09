@@ -3,6 +3,9 @@
 
 name: Azure Deployment
 
+permissions:
+  contents: read
+
 on:
   push:
     tags: [v*]
