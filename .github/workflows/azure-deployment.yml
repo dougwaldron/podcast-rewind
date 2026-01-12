@@ -3,9 +3,6 @@
 
 name: Azure Deployment
 
-permissions:
-  contents: read
-
 on:
   push:
     tags: [v*]
@@ -14,6 +11,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Check out repository
@@ -45,6 +44,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     permissions:
+      contents: read
       id-token: write #This is required for requesting the JWT
 
     steps:
@@ -68,3 +68,4 @@ jobs:
           slot-name: "production"
           package: .
           # clean: false # Be sure to set `clean: false` when upgrading from webapps-deploy@v2 to v3
+
