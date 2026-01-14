@@ -22,6 +22,11 @@ function copyToClipboard(caller) {
             }, 2000)
         }
     }).catch(err => {
-        console.error('Failed to copy text: ', err)
+        console.error('Failed to copy RSS link to clipboard: ', err)
+        // Update title to show error
+        caller.title = 'Failed to copy. Please try again.'
+        setTimeout(() => {
+            caller.title = 'Copy RSS link to clipboard'
+        }, 3000)
     })
 }
