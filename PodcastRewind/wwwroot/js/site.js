@@ -8,7 +8,7 @@ let copyTimeoutId = null;
 const CLIPBOARD_CHECK_ICON = '/img/clipboard-check.svg';
 
 function copyToClipboard(caller) {
-    let feedLink = caller.getAttribute('data-link')
+    let feedLink = caller.getAttribute('data-link');
     
     // Validate feedLink exists
     if (!feedLink) {
@@ -23,41 +23,41 @@ function copyToClipboard(caller) {
     
     navigator.clipboard.writeText(feedLink).then(() => {
         // Get the image element inside the button
-        const img = caller.querySelector('img')
+        const img = caller.querySelector('img');
         if (img) {
             // Store the original src and title
-            const originalSrc = img.src
-            const originalTitle = caller.title
+            const originalSrc = img.src;
+            const originalTitle = caller.title;
             
             // Change to checkmark icon
-            img.src = CLIPBOARD_CHECK_ICON
+            img.src = CLIPBOARD_CHECK_ICON;
             // Update the button title for accessibility
-            caller.title = 'Copied!'
+            caller.title = 'Copied!';
             
             // Restore the original icon after 2 seconds
             copyTimeoutId = setTimeout(() => {
-                img.src = originalSrc
-                caller.title = originalTitle
-                copyTimeoutId = null
-            }, 2000)
+                img.src = originalSrc;
+                caller.title = originalTitle;
+                copyTimeoutId = null;
+            }, 2000);
         } else {
             // If no img element found, just update the title
-            const originalTitle = caller.title
-            caller.title = 'Copied!'
+            const originalTitle = caller.title;
+            caller.title = 'Copied!';
             copyTimeoutId = setTimeout(() => {
-                caller.title = originalTitle
-                copyTimeoutId = null
-            }, 2000)
+                caller.title = originalTitle;
+                copyTimeoutId = null;
+            }, 2000);
         }
     }).catch(err => {
-        console.error('Failed to copy RSS link to clipboard: ', err)
+        console.error('Failed to copy RSS link to clipboard: ', err);
         // Store original title before modifying
-        const originalTitle = caller.title
+        const originalTitle = caller.title;
         // Update title to show error
-        caller.title = 'Failed to copy. Please try again.'
+        caller.title = 'Failed to copy. Please try again.';
         copyTimeoutId = setTimeout(() => {
-            caller.title = originalTitle
-            copyTimeoutId = null
-        }, 3000)
-    })
+            caller.title = originalTitle;
+            copyTimeoutId = null;
+        }, 3000);
+    });
 }
