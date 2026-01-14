@@ -1,6 +1,6 @@
 namespace PodcastRewind.Models.Entities;
 
-public class FeedRewindInfo
+public record FeedRewindInfo
 {
     public Guid Id { get; init; }
     public string FeedUrl { get; init; } = string.Empty;
@@ -9,4 +9,5 @@ public class FeedRewindInfo
     public int Interval { get; init; }
     public DateTime CreatedOn { get; init; } = DateTime.Now;
     public DateTime UpdatedOn { get; init; } = DateTime.Now;
+    public DateTime? LastAccessedOn { get; init; }
 }

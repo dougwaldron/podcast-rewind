@@ -10,6 +10,7 @@ public interface IFeedRewindInfoRepository
     Task<Guid> SaveAsync(CreateFeedRewindInfoDto create);
     Task UpdateAsync(EditFeedRewindInfoDto edit);
     Task<FeedRewindInfo?> GetAsync(Guid id);
+    Task UpdateLastAccessedAsync(Guid id);
 }
 
 public class FeedRewindInfoRepository(IConfiguration config, IMemoryCache cache)
@@ -62,6 +63,22 @@ public class FeedRewindInfoRepository(IConfiguration config, IMemoryCache cache)
         feedRewind = await LoadFeedRewindInfoFromFileAsync(id);
         if (feedRewind != null) cache.Set(id, feedRewind, CacheEntryOptions);
         return feedRewind;
+    }
+
+    public async Task UpdateLastAccessedAsync(Guid id)
+    {
+        var feedRewind = await GetAsync(id);
+        if (feedRewind == null) return;
+
+        // Only update if more than 5 minutes have passed since last access
+        if (feedRewind.LastAccessedOn.HasValue && 
+            (DateTime.UtcNow - feedRewind.LastAccessedOn.Value).TotalMinutes < 5)
+        {
+            return;
+        }
+
+        var updatedFeedRewind = feedRewind with { LastAccessedOn = DateTime.UtcNow };
+        await SaveFeedRewindInfoToFileAsync(id, updatedFeedRewind);
     }
 
     private async Task SaveFeedRewindInfoToFileAsync(Guid id, FeedRewindInfo feedRewind)
