@@ -10,7 +10,7 @@
     },
     {
       "provider": "cdnjs",
-      "library": "bootstrap@5.3.3",
+      "library": "bootstrap@5.3.8",
       "destination": "wwwroot/lib/bootstrap/",
       "files": [
         "js/bootstrap.bundle.min.js",
