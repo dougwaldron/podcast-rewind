@@ -22,7 +22,8 @@ html {
 
 .list-group-item .form-check-label:hover,
 .list-group-item .form-check-label:focus {
-  background-color: rgb(133, 235, 255);
+  background-color: #85EBFFFF;
+  color: #212529;
 }
 
 .btn-icon img {

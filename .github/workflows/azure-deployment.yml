@@ -11,6 +11,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Check out repository
@@ -42,6 +44,7 @@ jobs:
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
 
     permissions:
+      contents: read
       id-token: write #This is required for requesting the JWT
 
     steps:
