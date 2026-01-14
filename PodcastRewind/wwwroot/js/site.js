@@ -4,8 +4,7 @@
 // Store timeout ID to prevent race conditions with rapid clicks
 let copyTimeoutId = null;
 
-// Icon paths
-const CLIPBOARD_ICON = '/img/clipboard.svg';
+// Icon path for success feedback
 const CLIPBOARD_CHECK_ICON = '/img/clipboard-check.svg';
 
 function copyToClipboard(caller) {
@@ -38,6 +37,14 @@ function copyToClipboard(caller) {
             // Restore the original icon after 2 seconds
             copyTimeoutId = setTimeout(() => {
                 img.src = originalSrc
+                caller.title = originalTitle
+                copyTimeoutId = null
+            }, 2000)
+        } else {
+            // If no img element found, just update the title
+            const originalTitle = caller.title
+            caller.title = 'Copied!'
+            copyTimeoutId = setTimeout(() => {
                 caller.title = originalTitle
                 copyTimeoutId = null
             }, 2000)
