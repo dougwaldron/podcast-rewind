@@ -3,7 +3,15 @@
 <svg version="1.1" id="US_x5F_UK" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 width="149.1049px" height="26.7547px" viewBox="0 0 149.1049 26.7547" enable-background="new 0 0 149.1049 26.7547"
 	 xml:space="preserve">
-<g id="XMLID_417_">
+    <style>
+        @media (prefers-color-scheme:light){
+            #XMLID_415_, #XMLID_417_ {fill:#000;}
+        }
+        @media (prefers-color-scheme:dark){
+            #XMLID_415_, #XMLID_417_ {fill:#0c93ae;}
+        }
+    </style>
+    <g id="XMLID_417_">
 	<g>
 		<path d="M34.6537,7.5369h-3.7764V1.4822h0.9395v5.1904h2.8369V7.5369z"/>
 		<path d="M35.7426,1.616c0-0.3145,0.248-0.5537,0.583-0.5537c0.3359,0,0.584,0.2393,0.584,0.5537
