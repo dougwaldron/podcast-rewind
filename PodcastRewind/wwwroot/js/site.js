@@ -4,8 +4,18 @@
 // Store timeout ID to prevent race conditions with rapid clicks
 let copyTimeoutId = null;
 
+// Icon paths
+const CLIPBOARD_ICON = '/img/clipboard.svg';
+const CLIPBOARD_CHECK_ICON = '/img/clipboard-check.svg';
+
 function copyToClipboard(caller) {
     let feedLink = caller.getAttribute('data-link')
+    
+    // Validate feedLink exists
+    if (!feedLink) {
+        console.error('No data-link attribute found on button');
+        return;
+    }
     
     // Clear any existing timeout to prevent race conditions
     if (copyTimeoutId) {
@@ -21,7 +31,7 @@ function copyToClipboard(caller) {
             const originalTitle = caller.title
             
             // Change to checkmark icon
-            img.src = '/img/clipboard-check.svg'
+            img.src = CLIPBOARD_CHECK_ICON
             // Update the button title for accessibility
             caller.title = 'Copied!'
             
