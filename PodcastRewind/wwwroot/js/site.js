@@ -3,5 +3,25 @@
 
 function copyToClipboard(caller) {
     let feedLink = caller.getAttribute('data-link')
-    navigator.clipboard.writeText(feedLink)
+    navigator.clipboard.writeText(feedLink).then(() => {
+        // Get the image element inside the button
+        const img = caller.querySelector('img')
+        if (img) {
+            // Store the original src
+            const originalSrc = img.src
+            // Change to checkmark icon
+            img.src = '/img/clipboard-check.svg'
+            // Update the button title for accessibility
+            const originalTitle = caller.title
+            caller.title = 'Copied!'
+            
+            // Restore the original icon after 2 seconds
+            setTimeout(() => {
+                img.src = originalSrc
+                caller.title = originalTitle
+            }, 2000)
+        }
+    }).catch(err => {
+        console.error('Failed to copy text: ', err)
+    })
 }
