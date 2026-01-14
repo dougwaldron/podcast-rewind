@@ -30,7 +30,9 @@ html {
   height: 1.5rem;
   vertical-align: text-top;
 }
-
+#rss-link .btn-icon:hover img {
+    filter: invert(0.5)
+}
 .pr-logo {
   font-variant: unicase;
   font-weight: 500;
