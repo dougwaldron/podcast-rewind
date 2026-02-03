@@ -62,12 +62,13 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@657f0700ea5214d56a0400d8ac5e8023c963d25d
+        uses: azure/webapps-deploy@122b7ec46017e53a3f71e3a027d67550a1641f5e
         with:
           app-name: "podcast-rewind"
           slot-name: "production"
           package: .
-          clean: false # Be sure to set `clean: false` when upgrading from webapps-deploy@v2 to v3
+          # clean: false # Be sure to set `clean: false` when upgrading from webapps-deploy@v2 to v3
+
 
 
 
