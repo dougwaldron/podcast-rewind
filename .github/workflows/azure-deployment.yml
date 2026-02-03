@@ -8,6 +8,9 @@ on:
     tags: [v*]
   workflow_dispatch:
 
+env:
+  AZURE_WEBAPP_PACKAGE_PATH: '.'
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -23,17 +26,17 @@ jobs:
         with:
           global-json-file: global.json
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Build and publish
+        run: |
+          dotnet restore
+          dotnet build --configuration Release --no-restore
+          dotnet publish -c Release -o '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp'
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}/myapp
 
   deploy:
     runs-on: ubuntu-latest
@@ -68,3 +71,4 @@ jobs:
           slot-name: "production"
           package: .
           clean: false # Be sure to set `clean: false` when upgrading from webapps-deploy@v2 to v3
+
