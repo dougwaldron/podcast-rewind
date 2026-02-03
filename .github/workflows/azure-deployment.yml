@@ -67,7 +67,8 @@ jobs:
           app-name: "podcast-rewind"
           slot-name: "production"
           type: zip
-          package: .net-app.zip
+          package: *.zip
           clean: false # Be sure to set `clean: false` when upgrading from webapps-deploy@v2 to v3
+
 
 
