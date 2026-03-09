@@ -62,7 +62,7 @@ jobs:
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
-        uses: azure/webapps-deploy@122b7ec46017e53a3f71e3a027d67550a1641f5e
+        uses: azure/webapps-deploy@b2037aa567123fe6dfb0f4a95969067d76e35d7b
         with:
           app-name: "podcast-rewind"
           slot-name: "production"
