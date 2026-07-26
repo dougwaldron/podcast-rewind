@@ -1,8 +1,8 @@
-﻿using System.ServiceModel.Syndication;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using PodcastRewind.Models;
 using PodcastRewind.Services;
+using System.ServiceModel.Syndication;
 
 namespace PodcastRewind.Pages;
 
@@ -16,7 +16,7 @@ public class DetailsModel(IFeedRewindDataService feedService)
     public Guid RewindFeedId { get; private set; }
     public SyndicationFeed? RewoundFeed { get; private set; }
     public List<SyndicationItem> ScheduledItems { get; } = [];
-    public string PodcastImageUrl { get; private set; } = string.Empty;
+    public string? PodcastImageUrl { get; private set; }
 
     public async Task<IActionResult> OnGetAsync(Guid? id)
     {
@@ -33,7 +33,7 @@ public class DetailsModel(IFeedRewindDataService feedService)
         RewindFeedId = id.Value;
         RewindFeedUrl = Url.ActionLink("Get", "Feed", new { id })!;
         ApplePodcastSubscribeUrl = Url.ActionLink("Get", "Feed", new { id }, "podcast")!;
-        PodcastImageUrl = RewoundFeed.ImageUrl?.ToString() ?? "";
+        PodcastImageUrl = RewoundFeed.ImageUrl?.AbsoluteUri;
         OriginalPodcastLink = FeedRewindData.OriginalFeedLink?.AbsoluteUri;
 
         return Page();

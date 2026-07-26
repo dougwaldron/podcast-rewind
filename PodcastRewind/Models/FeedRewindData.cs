@@ -1,7 +1,7 @@
+using PodcastRewind.Models.Entities;
 using System.ServiceModel.Syndication;
 using System.Text;
 using System.Xml;
-using PodcastRewind.Models.Entities;
 
 namespace PodcastRewind.Models;
 
@@ -18,7 +18,7 @@ public class FeedRewindData(FeedRewindInfo feedRewindInfo, SyndicationFeed origi
     private readonly Uri? _feedPageUri = feedPageLink is null ? null : new Uri(feedPageLink);
 
     public Uri? OriginalFeedLink { get; } =
-        originalFeed.Links.FirstOrDefault(link => link.RelationshipType == "alternate")?.Uri;
+        originalFeed.Links.FirstOrDefault(link => link.RelationshipType == "alternate")?.GetAbsoluteUri();
 
     public string FeedTitle { get; } = originalFeed.Title.Text;
     private SyndicationFeed? RewoundFeed { get; set; }
