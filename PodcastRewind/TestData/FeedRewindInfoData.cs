@@ -1,7 +1,9 @@
 using PodcastRewind.Models.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace PodcastRewind.TestData;
 
+[SuppressMessage("Minor Code Smell", "S1075:URIs should not be hardcoded")]
 internal static partial class Data
 {
     public static List<FeedRewindInfo> FeedRewindInfoData { get; } =
